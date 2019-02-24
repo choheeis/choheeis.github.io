@@ -1,14 +1,14 @@
-title: choheeis
+title: Welcome to CHOHEEIS !
 description: chohee's develop & coding diary
 author: kimchohee
 github: https://github.com/choheeis
 about: 22, student
 disqus_shortname: stackproblems
 google_analytics: UA-XXXXXXXX-Y
-avatar_url: /static/img/avatar.jpg
+avatar_url: /static/img/chohee.jpg
 
 enableTags: true
-tagarray: []
+tagarray: []nu
 
 collections:
   project:
@@ -28,8 +28,8 @@ urls:
       url: /about/
     - text: My Projects
       url: /projects/
-    - text: XML Feed
-      url: /feed.xml
+    # - text: XML Feed
+    #   url: /feed.xml
 
 url: "https://agusmakmun.github.io"
 baseurl: ""
