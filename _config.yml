@@ -8,7 +8,7 @@ google_analytics: UA-XXXXXXXX-Y
 avatar_url: /static/img/chohee.jpg
 
 enableTags: true
-tagarray: []nu
+tagarray: []
 
 collections:
   project:
