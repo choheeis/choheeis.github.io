@@ -6,6 +6,7 @@
   font-size: 20px;
   color: #212121;
 }
+
 hr {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -13,49 +14,68 @@ hr {
   border-top: 1px solid #F7F1F1;
   border-bottom: 1px solid #fff;
 }
-span.time, span.categories {
+
+span.time,
+span.categories {
   color: #ADADAD;
   margin-bottom: 5px;
   font-size: 11px;
 }
-h1, h2, h3 {
+
+h1,
+h2,
+h3 {
   color: #696969;
   font-weight: normal;
 }
+
 h1 {
   margin-bottom: 10px;
   font-size: 25px;
 }
-h2, h3 {
+
+h2,
+h3 {
   margin-bottom: 5px;
 }
-a, a:link, a:active {
+
+a,
+a:link,
+a:active {
   text-decoration: none;
   color: #3fa757;
 }
+
 a:hover {
   color: #B3B3B3;
   text-decoration: underline;
 }
 
+
 /* Layout */
+
 .main-layout {
   background: #fff;
 }
+
 .sidebar-nav {
   margin: 0;
   padding: 0;
 }
+
 .sidebar-nav li {
   margin: 0;
   list-style: none;
 }
+
 .sidebar-nav li::before {
   content: "»";
   margin-right: .5em;
 }
 
+
 /* Content */
+
 div.content pre {
   background: #333333;
   padding: 10px;
@@ -65,9 +85,11 @@ div.content pre {
   font-size: 12px;
   border: none;
 }
+
 div.content .highlight {
-	background: #333333;
+  background: #333333;
 }
+
 footer {
   border-top: 1px solid #F7F1F1;
   width: 100%;
@@ -81,22 +103,38 @@ footer {
   padding-bottom: 10px;
 }
 
+
 /* Left column */
+
 div.col-sm-3 {
   margin-top: 100px;
   font-size: 11px;
   color: #666;
 }
+
 div.col-sm-3 strong {
   font-size: 16px;
   color: #4A4A4A;
   font-weight: normal;
 }
+
 div.col-sm-3 div.profile-about {
   margin-top: 10px;
   color: #8C8C8C;
 }
+
 div.col-sm-3 img.profile-avatar {
+  height: 100px;
+  width: 75px;
+  /* This is the part of resizing the profile picture to make the photo *fit* inside the `profile-avatar-wrapper`.
+   * If you change the profile, change this value accordingly to the new profile's dimension.
+   */
+}
+
+.profile-avatar-wrapper {
+  height: 75px;
+  width: 75px;
+  overflow: hidden;
   border-radius: 150px;
   -webkit-border-radius: 150px;
   -moz-border-radius: 150px;
@@ -104,46 +142,59 @@ div.col-sm-3 img.profile-avatar {
   -o-border-radius: 150px;
   margin-left: auto;
   margin-right: auto;
+  /* This is the part of modifying the wrapper itself.
+   */
 }
 
+
 /* Pagination */
+
 .PageNavigation {
   font-size: 14px;
   display: block;
   width: auto;
   overflow: hidden;
 }
+
 .PageNavigation a {
   display: block;
   width: 50%;
   float: left;
   margin: 1em 0;
 }
+
 .PageNavigation .next {
   text-align: right;
 }
+
 .PageNavigation .prev {
   text-align: left;
 }
 
+
 /* Social Icons */
-.social{
+
+.social {
   display: block;
   margin: 10px 0;
 }
+
 .social ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
+
 .social ul li {
   display: inline-block;
   margin: 0 5px;
 }
+
 .social li a {
   font-size: 16px;
   color: #969394;
 }
+
 .social li a:hover {
   color: #6D6D6D;
 }
@@ -153,18 +204,22 @@ div.col-sm-3 img.profile-avatar {
   border-top: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
 }
+
 .post-content img,
 .content img {
   max-width: 100%
 }
 
+
 /* Responsive Conditional */
+
 @media (min-width: 1024px) {
   .fixed-condition {
     position: fixed;
     max-width: 255px;
   }
 }
+
 @media (max-width: 768px) {
   div.col-sm-3 {
     margin-top: 30px;
