@@ -199,7 +199,7 @@ KMP 알고리즘은 __문자열 매칭 알고리즘__ 의 대표적인 알고리
 	같은 접두사, 접미사가 있는지 알아보기 위해 결과값을 보면 빨간 동그라미에 의해 1개 문자가 같은 접두사, 접미사가 "abaca"에 존재한다는 것을 알 수 있다. 
 
 	따라서 패턴을 현재 매칭 실패 위치인 빨간색 a에서 1칸 전 위치로 이동시키면 된다는 것을 알 수 있게 된다!
-	
+
 	<br>
 
 
@@ -243,7 +243,7 @@ using namespace std;
 vector<int> makeResultArray(string pattern){
 	int patternSize = pattern.size(); // 패턴 문자열의 길이 
 	
-	// 배열의 크기가 패턴 문자열의 길이와 같고, 배열의 모든 원소가 0으로 초기화된 vector 생성 
+	// 배열의 크기가 패턴 문자열의 길이와 같고, 배열의 모든 원소가 0으로 초기화된 vector 생성 = 결과값을 넣을 배열
 	vector<int> resultArray(patternSize, 0);  
 	
 	int j = 0; 
@@ -251,12 +251,12 @@ vector<int> makeResultArray(string pattern){
 		
 		// i 아래 문자와 j 아래 문자가 일치하는 경우 
 		if(pattern[i] == pattern[j]){ 
-			resultArray[i] = j + 1; // 현재 j가 가리키는 원소의 인덱스에 1을 더함  
+			resultArray[i] = j + 1; // 현재 j의 인덱스에 1을 더함  
 			j = j + 1; // j 를 i와 함께 증가시켜줌  
 		}
 		
 		// i 아래 문자와 j 아래 문자가 일치하지 않을 경우 실행되는 부분
-		// 두 문자가 다른 경우 j 를 뒤로 이동시키고 다시 한번 j와 i 아래에 있는 문자를 비교하기 때문에 while을 사용  
+		// 두 문자가 다른 경우 j 를 뒤로 이동시키고 다시 한번 j와 i 아래에 있는 문자를 비교
 		while(j > 0 && pattern[i] != pattern[j]){
 			j = j - 1;
 			if(pattern[i] == pattern[j]){
@@ -339,7 +339,7 @@ void KMP(string parent, string pattern){
 		
 		// parent[i]에 해당하는 문자와 pattern[j]에 해당하는 문자가 같지 않을 경우 
 		while(j > 0 && parent[i] != pattern[j]){
-			j = resultArray[j-1]; 
+			j = resultArray[j-1]; // 패턴 문자열 점프
 		}
 		
 		// parent문자열과 pattern문자열을 한 문자씩 비교할 때 두 문자가 같을 경우 
