@@ -304,22 +304,17 @@ vector<int> makeResultArray(string pattern){
 	int j = 0; 
 	for(int i = 1 ; i < patternSize ; i++){
 		
-		// i 아래 문자와 j 아래 문자가 일치하는 경우 
-		if(pattern[i] == pattern[j]){ 
-			resultArray[i] = j + 1; // 현재 j가 가리키는 원소의 인덱스에 1을 더함  
-			j = j + 1; // j 를 i와 함께 증가시켜줌  
+		// i 아래 문자와 j 아래 문자가 일치하지 않을 경우 실행되는 부분
+		// 두 문자가 다른 경우 j 를 뒤로 이동시키고 다시 한번 j와 i 아래에 있는 문자를 비교
+		while(j > 0 && pattern[i] != pattern[j]){
+			j = resultArray[j-1];	
 		}
 		
-		// i 아래 문자와 j 아래 문자가 일치하지 않을 경우 실행되는 부분
-		// 두 문자가 다른 경우 j 를 뒤로 이동시키고 다시 한번 j와 i 아래에 있는 문자를 비교하기 때문에 while을 사용  
-		while(j > 0 && pattern[i] != pattern[j]){
-			j = j - 1;
-			if(pattern[i] == pattern[j]){
-				resultArray[i] = j + 1;
-				j = j + 1;
-				break;
-			}
+		// i 아래 문자와 j 아래 문자가 일치하는 경우 
+		if(pattern[i] == pattern[j]){ 
+			resultArray[i] = ++j; // 현재 j가 가리키는 원소의 인덱스에 1을 더하고 j를 i와 함께 증가시켜줌 
 		}
+	
 	}
 	return resultArray; 
 }
