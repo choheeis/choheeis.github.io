@@ -11,19 +11,19 @@ categories: [RxJava]
 
 <br>
 
-RxJava는 Reactive Programming을 할 수 있게 해주는 __"JVM 위의 자바 언어로 구현해놓은 라이브러리"__ 이다!
-
-한 마디로 RxJava는 자바 라이브러리인데 자바 말고 다른 언어에서도 RxJava와 같이 Reactive Programming을 지원해주는 라이브러리가 있을까?
-
-있다!!!
+RxJava는 Reactive Programming을 할 수 있게 해주는 __"JVM 위에서 자바로 구현해놓은 라이브러리"__ 이다!.
 
 > Rx는 ReactiveX의 줄임말이고 ReactiveX는 __Reactive Extensions__ 의 줄임말이다. 
 
-[ReactiveX 의 공식 깃헙](https://github.com/ReactiveX)에 들어가보면 RxJava외에도 RxKotlin, RxSwift, RxPY, RxAndroid, RxCpp, RxRuby 등등 이미 많은 언어들이 Reactive Programming을 지원하는 라이브러리를 제공하고 있음을 알 수 있다!
-
-> RxJava공식 깃헙 링크 --> [여기](https://github.com/ReactiveX/RxJava) 
-
 RxJava는 사실 2013년에 넷플릭스가 처음 만든 라이브러리이다. 당시 넷플릭스는 REST 기반의 API 호출 시 콜백 지옥에 빠지는 점을 해결하기 위해 RxJava를 만들게 되었고, 지금은 __RxJava3__ 이 작성될 정도로 꾸준히 업데이트 되고 있는 라이브러리이다. 
+
+그렇다면 RxJava와 같이 Reactive Programming을 지원해주는 다른 언어로 만들어진 라이브러리가 있을까?
+
+있다!!!
+
+[ReactiveX 의 공식 깃헙](https://github.com/ReactiveX)에 들어가보면 RxJava외에도 RxKotlin, RxSwift, RxPY, RxAndroid, RxCpp, RxRuby 등등 이미 많은 언어들이 Reactive Programming을 지원하고 있음을 알 수 있다.
+
+
 
 <br>
 
@@ -36,9 +36,7 @@ RxJava는 사실 2013년에 넷플릭스가 처음 만든 라이브러리이다.
 
 1. __프로젝트 생성하기__
 
-    > Intellij는 이번 RxJava 스터디를 하면서 처음 사용해본 IDE였다. Android Studio에 익숙해서 그런지 Intellij도 많이 낯설지는 않은 편이였다.
-
-    <br>
+    > Intellij는 이번 RxJava 스터디를 하면서 처음 사용해본 IDE 였다. Android Studio에 익숙해서 그런지 Intellij도 많이 낯설지 않은 편이여서 다행이다..
 
     프로젝트를 생성하기 위해 먼저 
 
@@ -64,7 +62,7 @@ RxJava는 사실 2013년에 넷플릭스가 처음 만든 라이브러리이다.
 
     이 최신 버전이다.
 
-    위 프로젝트 구조 그림에서 __build.gradle__ 파일에서 다음과 같이 추가해주면 된다.
+    위에 있는 프로젝트 구조를 나타낸 그림에서 __build.gradle__ 파일에서 다음과 같이 추가해주면 된다.
 
     ![02](https://user-images.githubusercontent.com/31889335/73610163-e184f280-4617-11ea-8985-c8d4d1daf926.PNG)
 
@@ -72,9 +70,9 @@ RxJava는 사실 2013년에 넷플릭스가 처음 만든 라이브러리이다.
 
 3. __실습할 파일 만들기__
 
-    이제 위 프로젝트 구조 그림에 있는 java 폴더안에서 실습을 위한 클래스 파일을 하나 생성해주자.
+    이제 위 프로젝트 구조 그림에 있는 java 폴더 안에서 실습을 위한 클래스 파일을 하나 생성해주자.
 
-    java 폴더를 더블 클릭하니 다음과 같은 Project Structur가 나와서 Dependencies 설정에서 앞에서 추가한 라이브러리를 체크해주었다!
+    java 폴더를 더블 클릭하니 다음과 같은 Project Structure 가 나와서 Dependencies 설정에서 앞에서 추가한 라이브러리를 체크해주었다!
     
     ![03](https://user-images.githubusercontent.com/31889335/73610162-e184f280-4617-11ea-8ddb-1959e39458e6.PNG)
 
