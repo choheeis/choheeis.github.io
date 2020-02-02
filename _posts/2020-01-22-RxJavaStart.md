@@ -34,51 +34,51 @@ RxJava는 사실 2013년에 넷플릭스가 처음 만든 라이브러리이다.
 
 <br>
 
-1. __프로젝트 생성하기__
+__1. 프로젝트 생성하기__
 
-    > Intellij는 이번 RxJava 스터디를 하면서 처음 사용해본 IDE 였다. Android Studio에 익숙해서 그런지 Intellij도 많이 낯설지 않은 편이여서 다행이다..
+> Intellij는 이번 RxJava 스터디를 하면서 처음 사용해본 IDE 였다. Android Studio에 익숙해서 그런지 Intellij도 많이 낯설지 않은 편이여서 다행이다..
 
-    프로젝트를 생성하기 위해 먼저 
+프로젝트를 생성하기 위해 먼저 
 
-    ![01](https://user-images.githubusercontent.com/31889335/73610164-e21d8900-4617-11ea-9f21-e548199915ea.PNG)
+![01](https://user-images.githubusercontent.com/31889335/73610164-e21d8900-4617-11ea-9f21-e548199915ea.PNG)
 
-    이렇게 Gradle 프로젝트를 만든다.
+이렇게 Gradle 프로젝트를 만든다.
 
-    그러면 다음과 같은 구조를 가지고 있는 프로젝트가 생성될 것이다.
+그러면 다음과 같은 구조를 가지고 있는 프로젝트가 생성될 것이다.
 
-    ![04](https://user-images.githubusercontent.com/31889335/73610237-7a1b7280-4618-11ea-89b0-4f38a019f622.PNG)
+![04](https://user-images.githubusercontent.com/31889335/73610237-7a1b7280-4618-11ea-89b0-4f38a019f622.PNG)
 
     <br>
 
-2. __dependency 설정하기__
+__2. dependency 설정하기__
 
-    RxJava는 라이브러리이기 때문에 다음과 같이 프로젝트의 dependency로 직접 추가해줘야 한다.
+RxJava는 라이브러리이기 때문에 다음과 같이 프로젝트의 dependency로 직접 추가해줘야 한다.
 
-    [RxJava 공식 깃허브 리드미](https://github.com/ReactiveX/RxJava) 를 보면 Rxjava 실습을 위한 __Gradle compile dependency__ 로 RxJava3 버전이 명시되어 있다. 현재 포스팅일 기준으로는
+[RxJava 공식 깃허브 리드미](https://github.com/ReactiveX/RxJava) 를 보면 Rxjava 실습을 위한 __Gradle compile dependency__ 로 RxJava3 버전이 명시되어 있다. 현재 포스팅일 기준으로는
     
-    ~~~java
-    implementation "io.reactivex.rxjava3:rxjava:3.0.0-RC9"
-    ~~~
+~~~java
+implementation "io.reactivex.rxjava3:rxjava:3.0.0-RC9"
+~~~
 
-    이 최신 버전이다.
+이 최신 버전이다.
 
-    위에 있는 프로젝트 구조를 나타낸 그림에서 __build.gradle__ 파일에서 다음과 같이 추가해주면 된다.
+위에 있는 프로젝트 구조를 나타낸 그림에서 __build.gradle__ 파일에서 다음과 같이 추가해주면 된다.
 
-    ![02](https://user-images.githubusercontent.com/31889335/73610163-e184f280-4617-11ea-8985-c8d4d1daf926.PNG)
+![02](https://user-images.githubusercontent.com/31889335/73610163-e184f280-4617-11ea-8985-c8d4d1daf926.PNG)
 
-    <br>
+<br>
 
-3. __실습할 파일 만들기__
+__3. 실습할 파일 만들기__
 
-    이제 위 프로젝트 구조 그림에 있는 java 폴더 안에서 실습을 위한 클래스 파일을 하나 생성해주자.
+이제 위 프로젝트 구조 그림에 있는 java 폴더 안에서 실습을 위한 클래스 파일을 하나 생성해주자.
 
-    java 폴더를 더블 클릭하니 다음과 같은 Project Structure 가 나와서 Dependencies 설정에서 앞에서 추가한 라이브러리를 체크해주었다!
+java 폴더를 더블 클릭하니 다음과 같은 Project Structure 가 나와서 Dependencies 설정에서 앞에서 추가한 라이브러리를 체크해주었다!
     
-    ![03](https://user-images.githubusercontent.com/31889335/73610162-e184f280-4617-11ea-8ddb-1959e39458e6.PNG)
+![03](https://user-images.githubusercontent.com/31889335/73610162-e184f280-4617-11ea-8ddb-1959e39458e6.PNG)
 
-    그 후, java 폴더위에서 마우스 오른쪽 클릭 후, 원하는 이름의 자바 클래스를 하나 생성하면 실습할 준비 끝이다!
+그 후, java 폴더위에서 마우스 오른쪽 클릭 후, 원하는 이름의 자바 클래스를 하나 생성하면 실습할 준비 끝이다!
 
-    <br>
+<br>
 
 
 
