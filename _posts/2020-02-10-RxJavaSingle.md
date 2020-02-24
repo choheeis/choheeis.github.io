@@ -46,6 +46,7 @@ Observable과 마찬가지로 Single도 여러 다양한 연산자를 통해 조
 
 어떤 연산자들은 Observable과 Single 사이의 interface로 사용되기 때문에 Observable과 Single을 혼합할 수 있게 해준다.
 
+Single과 관련된 다양한 연산자들은 [여기](http://reactivex.io/documentation/single.html) 에서 알아볼 수 있다!
 
 <br>
 
@@ -72,3 +73,69 @@ Single은 Observable을 생성할 때와 비슷한 방법으로 생성할 수 �
 
 이와 같다.
 
+<br>
+
+## 🐭 Observable에서 Single 클래스 사용하기
+---
+
+위에서 Observable과 Single을 혼합할 수 있다는 말이 언급된 적이 있다!
+
+이 말은 Observable에서 Single 클래스를 사용할 수 있다는 말이다.
+
+Observable에서 Single 클래스를 사용한 다양한 코드를 한 번 봐보자.
+
+<br>
+
+~~~java
+    public static void main(String[] args) {
+        Observable<String> source = Observable.just("Hello Single");
+        Single.fromObservable(source).subscribe(System.out::println);
+    }
+~~~
+
+위와 같은 코드에서는 먼저 String 형의 item을 발행하는 Observable을 생성하였다.
+
+그리고 이 Observable을 Single로 바꿀 때 사용되는 fromObservable연산자를 사용하여 Single로 바꾼 후, 구독하는 모습이다.
+
+따라서 이 코드의 실행결과는 
+
+![05](https://user-images.githubusercontent.com/31889335/75150153-1849b680-5747-11ea-8877-426b15f56ba1.PNG)
+
+이와 같다!
+
+이 때, just() 함수의 인자로 여러 데이터를 넣게되면 Single 클래스의 특징에서 벗어나는 것이므로 error가 발생한다!
+
+이 외에도 Observable에서 Single을 사용하는 여러 예시 코드가 있으니 필요하다면 자세히 살펴보도록!
+
+~~~java
+// 1. Single() 함수를 호출해 Single 객체 생성하기 
+// --> 출력결과는 "Hello Single"
+    public static void main(String[] args) {
+        Observable.just("Hello Single")
+            .single("default item").subscribe(System.out::println);
+    }
+
+
+// 2. first() 함수를 호출해 Single 객체 생성하기
+// --> 출력결과는 "Red"
+    public static void main(String[] args) {
+        String[] colors = {"Red", "Blue", "Gold"};
+        Observable.fromArray(colors)
+                .first("default value").subscribe(System.out::println);
+    } 
+
+// 3. 빈 Observable에서 Single 객체 생성하기
+// --> 출력결과는 "default value"
+    public static void main(String[] args) {
+        Observable.empty()
+                .single("default value").subscribe(System.out::println);
+    }   
+~~~
+
+위 3개의 추가 코드에서의 공통점은 모두 Single 객체로 변환되어 item이 단 한 개만 출력된다는 점이다!
+
+> Reactive Programming은 함수형 프로그래밍 기법을 활용하므로 Reactive 연산자를 종종 함수라고 표기하기도 한다!
+>
+> 여기까지 Single 클래스 스터디 끝!! 💗
+
+<br>
