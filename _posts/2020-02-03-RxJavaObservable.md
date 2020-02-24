@@ -166,7 +166,77 @@ observer는 __onNext, onError, onCompleted__ 라는 3가지 함수들을 가지�
 
     <br>
 
-> Observable의 By the terms of~~ 부터 다시 공부
+이제 ReactiveX에서는 관습적으로 __Observable이 onNext 함수를 호출하는 것 자체를 item의 방출이라고 부르고,__ 
 
+onNext를 제외한 __onCompleted 함수와 onError 함수를 호출하는 것을 notification을 호출한다고 부른다.__
+
+그렇기 때문에 위에서 Observable에 대해서 설명할 때 "Observable은 item을 방출하거나 notification을 보낸다" 라고 설명했던 것이였나보다!
+
+<br>
+
+따라서 observer는 자신의 함수로 onNext, onCompleted, onError 를 가지고 있으므로 비동기적 함수 호출의 더 정확한 코드는 다음과 같다.
+
+~~~
+// 1. onNext 함수 정의
+def myOnNext     = { item -> /* do something useful with item */ };
+
+// 2. onError 함수 정의
+def myError      = { throwable -> /* react sensibly to a failed call */ };
+
+// 3. onCompleted 함수 정의
+def myComplete   = { /* clean up after the final response */ };
+
+// 4. Observable 정의( = 체계 정의)
+def myObservable = someMethod(itsParameters);
+
+// 5. observer가 Observable 구독하도록 하기
+myObservable.subscribe(myOnNext, myError, myComplete);
+
+// 6. 다른 할일 하기
+~~~
+
+<br>
+
+## 🐶 구독 해지하기
+---
+
+위에서 알아본 ReactiveX는 여러 언어로 구현되어 있다. (RxJava, RxKotlin, RxJS 등등)
+
+이 중 ReactiveX가 구현된 어떤 언어에서는 조금 특별한 observer interface인 __Subscriber__ 이 존재한다. (여기서 observer interface는 onNext, onCompleted, onError 같은 observer의 함수들을 말한다.)
+
+이 Subscriber 이라는 interface에는 구독을 해지하는 기능인 unsubscribe 함수가 구현되어 있다.
+
+observer이 더 이상 구독하고 있는 Observable를 구독하고 싶지 않을 경우 unsubscribe 함수를 호출하면 된다.
+
+그러면 Observable에게는 새로운 item을 발행하는 것을 멈출지 말지에 대한 선택권이 주어지게 된다. 
+
+unsubscribe에 대한 결과는 Observable에 적용된 operator들의 chain을 타고 흘러갈 것이다. 그리고 그 chain 안에서 더 이상 item 방출을 멈추기 위한 각각의 link를 생성할 것이다. 
+
+하지만 이러한 과정이 즉시 일어난다고 보장할 수는 없고, unsubscribe를 통해 Observable에 붙어있는 observer가 아무도 없음에도 Observable이 item을 계속 방출하거나 방출하려고 시도할 가능성이 있다. 
+
+> 이 부분은 나중에 관련 코드가 나오면 다시한번 작성하자!
+
+<br>
+
+## 🐶 ReactiveX 에서 Naming Convention에 관련된 주의 사항
+---
+
+각기 다른 언어로 구현된 ReactiveX는 구현된 언어에 따라 각기 다른 naming 특징이 있다. 
+
+왜냐하면 ReactiveX의 naming에 대한 표준은 없기 때문에 ReactiveX를 구현한 각 언어마다 존재하는 해당 언어의 Convention을 따르면 된다.
+
+더 나아가서는 ReactiveX를 구현한 각각의 언어마다 같은 이름이지만 서로 다른 함축적 의미를 가지고 있는 경우가 있을 수 있고, 어떤 언어에서는 자연스러운 이름이지만 특정 언어에서는 이상해 보일 수도 있다.
+
+__onNext나 onError__ 같은 namming 패턴을 예로 들어보자. ( = on은 소문자, Next의 맨 첫 알파벳만 대문자인 패턴) 
+
+어떠한 언어에서는 이러한 네이밍 규칙을 함수를 나타낼 때 사용한다. 즉, 자바에서의 onClick 함수를 생각해보면 이 onClick 함수는 이벤트 핸들러이다. 하지만 ReactiveX에서 onNext는 이벤트 핸들러가 아니다. onNext는 그냥 onNext 함수의 핸들러인 것이다.  
+
+이런 것처럼 ReactiveX 만의 naming convention은 없으므로 구현된 각 언어의 naming convetion을 따르는 것이 좋다.
+
+<br>
+
+
+## 🐶 "Hot" Observable과 "Cold" Observable
+---
 
 
