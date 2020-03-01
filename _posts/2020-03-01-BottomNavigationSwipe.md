@@ -5,7 +5,7 @@ date:   2020-03-01 18:34:10 +0700
 categories: [안드로이드]
 ---
 
-> [머티리얼 디자인 TabLayout](https://material.io/develop/android/components/tab-layout/) 과 [ViewPager 공식 도큐먼트](https://developer.android.com/reference/android/support/v4/view/ViewPager.html)를 참고하여 공부한 포스팅!
+> [여기](https://droidmentor.com/bottomnavigationview-with-viewpager-android/)를 참고하여 작성한 포스팅~
 
 <br>
 
