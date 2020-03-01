@@ -75,77 +75,75 @@ categories: [안드로이드]
 
     <br>
 
-    ## ✋ Bottom Navigation Bar 만드는 법
+# ✋ Bottom Navigation Bar 만드는 법
 
-    1. __Bottom Navigation Bar에서 탭이 될 메뉴 resource를 최대 5개까지 만든다. (5개 이상은 불가하다.)__
+1. __Bottom Navigation Bar에서 탭이 될 메뉴 resource를 최대 5개까지 만든다. (5개 이상은 불가하다.)__
 
-        먼저 안드로이드 스튜디오의 res 폴더를 우클릭한 후, New --> Android Resource Directory 를 클릭한다. 
+    먼저 안드로이드 스튜디오의 res 폴더를 우클릭한 후, New --> Android Resource Directory 를 클릭한다. 
 
-        ![05](https://user-images.githubusercontent.com/31889335/75612052-77526580-5b63-11ea-962b-aba33d827de5.PNG)
+    ![05](https://user-images.githubusercontent.com/31889335/75612052-77526580-5b63-11ea-962b-aba33d827de5.PNG)
 
-        그러면 이런 창이 나오는데 이 때 type을 꼭 menu로 바꿔주어야 한다.
+    그러면 이런 창이 나오는데 이 때 type을 꼭 menu로 바꿔주어야 한다.
 
-        ![06](https://user-images.githubusercontent.com/31889335/75612065-92bd7080-5b63-11ea-9e46-e785a74cb942.PNG)
+    ![06](https://user-images.githubusercontent.com/31889335/75612065-92bd7080-5b63-11ea-9e46-e785a74cb942.PNG)
 
-        그러면 이렇게 res폴더 내에 새로운 menu 폴더가 생성되게 된다.
+    그러면 이렇게 res폴더 내에 새로운 menu 폴더가 생성되게 된다.
 
-        이 menu 폴더를 다시 우클릭 후, New --> Menu resource file를 클릭하면 
+    이 menu 폴더를 다시 우클릭 후, New --> Menu resource file를 클릭하면 
 
-        ![07](https://user-images.githubusercontent.com/31889335/75612085-ca2c1d00-5b63-11ea-81b6-31d5a4258cfa.PNG)
+    ![07](https://user-images.githubusercontent.com/31889335/75612085-ca2c1d00-5b63-11ea-81b6-31d5a4258cfa.PNG)
 
-        다음과 같은 창이 나온다. 파일의 이름을 결정하고 파일을 만들면 된다!
+    다음과 같은 창이 나온다. 파일의 이름을 결정하고 파일을 만들면 된다!
 
-        이와 같은 과정은 [Bottom Navigation View 도큐먼트](https://developer.android.com/reference/android/support/design/widget/BottomNavigationView.html#inherited-constants) 의
+    이와 같은 과정은 [Bottom Navigation View 도큐먼트](https://developer.android.com/reference/android/support/design/widget/BottomNavigationView.html#inherited-constants) 의
 
-        ![08](https://user-images.githubusercontent.com/31889335/75612118-052e5080-5b64-11ea-8082-d9d21251c0cf.PNG)
+    ![08](https://user-images.githubusercontent.com/31889335/75612118-052e5080-5b64-11ea-8082-d9d21251c0cf.PNG)
 
-        이 부분을 보고 만든 것이다!
+    이 부분을 보고 만든 것이다!
 
-        그럼 이제 이 xml 안에 위와 같은 코드를 작성하라는 것이므로 똑같이 작성해보자.
+    그럼 이제 이 xml 안에 위와 같은 코드를 작성하라는 것이므로 똑같이 작성해보자.
 
-        ![09](https://user-images.githubusercontent.com/31889335/75612140-2ee77780-5b64-11ea-9c83-85335cb1f6c7.PNG)
+    ![09](https://user-images.githubusercontent.com/31889335/75612140-2ee77780-5b64-11ea-9c83-85335cb1f6c7.PNG)
 
-        그러면 이렇게 빨간색으로 마구 표시가 될 것이다.
+    그러면 이렇게 빨간색으로 마구 표시가 될 것이다.
 
-        이유는 예시를 그대로 복사했기 때문에 내 프로젝트에는 아직 예시에서 사용한 아이콘이나 문자열들이 없기 때문이다.
+    이유는 예시를 그대로 복사했기 때문에 내 프로젝트에는 아직 예시에서 사용한 아이콘이나 문자열들이 없기 때문이다.
 
-        여기서 icon은 Bottom Navigation Bar에서 
+    여기서 icon은 Bottom Navigation Bar에서 
 
-        ![10](https://user-images.githubusercontent.com/31889335/75612191-9ef5fd80-5b64-11ea-989e-af7194ae397e.PNG)
+    ![10](https://user-images.githubusercontent.com/31889335/75612191-9ef5fd80-5b64-11ea-989e-af7194ae397e.PNG)
 
-        이 부분에 들어갈 icon을 말하고, title은
+    이 부분에 들어갈 icon을 말하고, title은
 
-        ![11](https://user-images.githubusercontent.com/31889335/75612188-9dc4d080-5b64-11ea-801c-27b96d5b2e48.PNG)
+    ![11](https://user-images.githubusercontent.com/31889335/75612188-9dc4d080-5b64-11ea-801c-27b96d5b2e48.PNG)
 
-        이 부분에 들어갈 컨텐츠를 말한다.
+    이 부분에 들어갈 컨텐츠를 말한다.
 
-        이것들을 내가 개발하고자 하는 UI에 맞게 바꿔주면 된다.
+    이것들을 내가 개발하고자 하는 UI에 맞게 바꿔주면 된다.
 
-        <br>
+    <br>
 
-    2. __BottomNavigationView라는 레이아웃 추가하기__
+2. __BottomNavigationView라는 레이아웃 추가하기__
 
-        [머티리얼 디자인 가이드 BottomNavigation](https://material.io/develop/android/components/bottom-navigation-view/) 에서는 다음과 같은 형식으로 BottomNavigationView 레이아웃을 추가하라고 되어있다.
+    [머티리얼 디자인 가이드 BottomNavigation](https://material.io/develop/android/components/bottom-navigation-view/) 에서는 다음과 같은 형식으로 BottomNavigationView 레이아웃을 추가하라고 되어있다.
 
-        ![12](https://user-images.githubusercontent.com/31889335/75612342-ddd88300-5b65-11ea-9c5a-8323881e0b83.PNG)
+    ![12](https://user-images.githubusercontent.com/31889335/75612342-ddd88300-5b65-11ea-9c5a-8323881e0b83.PNG)
 
-        나는 Bottom Navigation Bar를 어플을 시작한 후 첫 화면에 띄울 것이기 때문에 activity_main.xml에 다음과 같이 작성하였다.
+    나는 Bottom Navigation Bar를 어플을 시작한 후 첫 화면에 띄울 것이기 때문에 activity_main.xml에 다음과 같이 작성하였다.
 
-        ![13](https://user-images.githubusercontent.com/31889335/75619831-38083100-5bc4-11ea-91d9-6482f4fdf711.PNG)
+    ![13](https://user-images.githubusercontent.com/31889335/75619831-38083100-5bc4-11ea-91d9-6482f4fdf711.PNG)
 
-        BottomNavigationView의 속성으로 이전에 만든 menu를 연결해주는 모습을 볼 수 있다!
+    BottomNavigationView의 속성으로 이전에 만든 menu를 연결해주는 모습을 볼 수 있다!
 
-        ![14](https://user-images.githubusercontent.com/31889335/75619893-02177c80-5bc5-11ea-9649-b7ab784d0547.jpg)
+    ![14](https://user-images.githubusercontent.com/31889335/75619893-02177c80-5bc5-11ea-9649-b7ab784d0547.jpg)
 
-        여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다.
+    여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다.
 
-        이제 Bottom Navigation Bar의 각 탭에 띄울 화면을 연결시켜보자. 
+    이제 Bottom Navigation Bar의 각 탭에 띄울 화면을 연결시켜보자. 
 
-        <br>
+    <br>
 
-    ## ✋ Bottom Navigation Bar의 각 탭에 띄울 화면 연결시키기
 
-    > https://dev-imaec.tistory.com/11 이거 참고해서 이어서 해보기
 
 
 
