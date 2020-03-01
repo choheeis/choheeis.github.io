@@ -137,11 +137,11 @@ categories: [안드로이드]
 
     ![14](https://user-images.githubusercontent.com/31889335/75619893-02177c80-5bc5-11ea-9649-b7ab784d0547.jpg)
 
-    여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다.
-
-    이제 Bottom Navigation Bar의 각 탭에 띄울 화면을 연결시켜보자. 
+    여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다!
 
     <br>
+
+    ![bottomNavigation](https://user-images.githubusercontent.com/31889335/75622653-2df72a00-5be6-11ea-8dc3-5b0c5e695c75.gif)
 
 
 
