@@ -21,7 +21,7 @@ categories: [안드로이드]
 
     위 그림처럼 BottomNavigationView 라는 제목 위에 작은 글씨로 쓰여있는 부분이 있었다!
 
-    읽어보니 이 BottomNavigation은 26.1.0 버전부터 추가되었고, com.android.support:design:27.1.0 버전에 속해있다고 하는 것 같다.
+    읽어보니 이 BottomNavigation은 안드로이드 26.1.0 버전부터 추가되었고, com.android.support:design:27.1.0 버전에 속해있다고 하는 것 같다.
 
     즉, 이 BottomNavigation은 처음부터 있던 뷰가 아니라 중간에 추가된 뷰이고 안드로이드 지원 라이브러리 중 디자인 라이브러리(android.support:design)에 속해있는 뷰라는 것이다.
 
@@ -134,8 +134,6 @@ categories: [안드로이드]
     ![13](https://user-images.githubusercontent.com/31889335/75619831-38083100-5bc4-11ea-91d9-6482f4fdf711.PNG)
 
     BottomNavigationView의 속성으로 이전에 만든 menu를 연결해주는 모습을 볼 수 있다!
-
-    ![14](https://user-images.githubusercontent.com/31889335/75619893-02177c80-5bc5-11ea-9649-b7ab784d0547.jpg)
 
     여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다!
 
