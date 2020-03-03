@@ -206,6 +206,26 @@ create() 함수로 생성하면 PublishSubject를 조작적으로 cold Observabl
 
 ![08](https://user-images.githubusercontent.com/31889335/75650588-a965e380-5c99-11ea-8f1d-e1df04bf5028.PNG)
 
+Rxjava로 위의 PublishSubject를 구현해보자.
+
+~~~java
+    public static void main(String[] args) {
+        PublishSubject<String> subject = PublishSubject.create();
+        subject.subscribe(data -> System.out.println("Subscriber #1 => " + data));
+        subject.onNext("1");
+        subject.onNext("2");
+        subject.subscribe(data -> System.out.println("Subscriber #2 => " + data));
+        subject.onNext("3");
+        subject.onComplete();
+    }
+~~~
+
+위 코드의 실행결과는
+
+![13](https://user-images.githubusercontent.com/31889335/75748646-535d7280-5d63-11ea-836d-ac07d6f10f90.PNG)
+
+이와 같다. subscriber 1은 1, 2, 3을 모두 얻고, subscriber 2는 3만 얻는 모습을 볼 수 있다.
+
 <br>
 
 # 🐼 ReplaySubject
@@ -221,8 +241,32 @@ ReplaySubject는 Observable이 방출한 모든 아이템을 자신을 구독한
 
 이 마블다이어그램을 보면 두 번째 구독자가 구독하자 마자 앞에서 이미 방출했던 빨간색, 연두색 동그라미들을 한번에 차례로 방출해주는 모습을 볼 수 있다.
 
+즉, 모든 데이터를 저장해두었다가 새로운 subscriber가 생기면 저장해둔 데이터를 한 번에 주는 것이다.
+
+그렇기 때문에 모든 데이터 내용을 저장해두는 과정에서 메모리 누수가 발생할 가능성이 있으니 사용할 때 주의해야 한다.
+
 만약 ReplaySubject를 사용한다면 다중 스레드로부터 onNext 함수를 호출하지 않도록 주의해야한다. 왜냐하면 이런 호출이 순차적인 호출이 아닌 동시적으로 호출될 수 있기 때문이다. 
 
 동시적으로 호출되면 Observable 계약에 위배되는 것이기 때문이다.
+
+그렇다면 Rxjava로 ReplaySubject를 구현해보자.
+
+~~~java
+    public static void main(String[] args) {
+        ReplaySubject<String> subject = ReplaySubject.create();
+        subject.subscribe(data -> System.out.println("Subscriber #1 => " + data));
+        subject.onNext("1");
+        subject.onNext("2");
+        subject.subscribe(data -> System.out.println("Subscriber #2 => " + data));
+        subject.onNext("3");
+        subject.onComplete();
+    }
+~~~
+
+위 코드의 실행결과는 
+
+![14](https://user-images.githubusercontent.com/31889335/75749103-5c027880-5d64-11ea-8e81-f280d6e66713.PNG)
+
+이와 같다.
 
 <br>
