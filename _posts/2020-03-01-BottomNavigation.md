@@ -137,12 +137,46 @@ categories: [안드로이드]
 
     여기까지 하면 이렇게 하단에 BottomNavigationBar가 생기고 각 탭을 클릭할 수 있게 된다!
 
-    <br>
-
     ![bottomNavigation](https://user-images.githubusercontent.com/31889335/75622653-2df72a00-5be6-11ea-8dc3-5b0c5e695c75.gif)
 
+    <br>
 
+3. __Bottom navigation의 icon과 text 색깔 바꾸기__
 
+    만약 Bottom navigation의 각 탭을 눌렀을 경우와 누르지 않았을 경우 색을 다르게 하고 싶다면 selector를 이용하면 된다.
+
+    이 때, selector는 res 폴더 안에 color라는 폴더를 새로 생성하고 이 안에 xml 로 만들어야 한다. 
+
+    ~~~xml
+    <!-- color 폴더 안에 bottom_navigation_colors.xml이라는 selector를 만든 모습 -->
+    <?xml version="1.0" encoding="utf-8"?>
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:state_checked="true"
+            android:color="@color/colorAccent" />
+        <item
+            android:state_checked="false"
+            android:color="#ffffff" />
+    </selector>
+    ~~~
+
+    그 후, 
+
+    ~~~xml
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+    android:id="@+id/bottomNavigationBar"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:menu="@menu/bottom_nav_items"
+    android:background="@color/colorPrimary"
+    app:itemTextColor="@color/bottom_navigation_colors"
+    app:itemIconTint="@color/bottom_navigation_colors" />
+    ~~~
+
+    처럼 itemTextColor라는 속성과 itmeIconTint라는 속성에 selector를 적용시켜 주면 된다!
 
 
 
