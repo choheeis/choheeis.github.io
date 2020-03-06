@@ -115,6 +115,15 @@ ReactiveX의 연산자를 크게 분류해보면
 
 # 🥎 자주 사용되는 연산자
 
+이제 ReactiveX 연산자들 중 자주 사용되는 연산자 4개에 대해서 간단히 알아보자.
+
+1. map() 함수
+2. flatMap() 함수
+3. filter() 함수
+4. reduce() 함수
+
+<br>
+
 ## 🏹 map( ) 함수
 
 ![02](https://user-images.githubusercontent.com/31889335/75752520-39745d80-5d6c-11ea-8327-d442bf3198d0.PNG)
@@ -158,4 +167,183 @@ item으로 가지고 있던 1, 2, 3, 5 뒤에 모두 !가 붙어 방출된 모�
 <br>
 
 ## 🏹 flatMap( ) 함수
+
+[flatMap()](http://reactivex.io/documentation/operators/flatmap.html) 함수는 위에서 알아본 map() 함수를 좀 더 발전시킨 함수이다. 
+
+하지만 다른 점이 있다면 map() 함수는 입력값을 어떤 함수에 넣어서 변환시켜주는 일대일 함수이지만 flatMap() 함수는 입력값을 함수에 넣으면 결과가 Observable로 나온다는 점이 다르다.
+
+즉, flatMap() 함수의 결과로 나온 Observable은 그 스스로도 item을 방출할 수 있다.
+
+또한 flatMap() 함수는 결과로 나온 Observable이 방출하는 item들을 합칠 수도 있다.
+
+따라서 flatMap() 함수는 일대다 혹은 일대일 Observable 함수이다.
+
+flatMap() 함수의 마블 다이어그램을 다음과 같다.
+
+![05](https://user-images.githubusercontent.com/31889335/76058118-d9c1c080-5fbe-11ea-807c-a5c964d58bcb.PNG)
+
+위 마블 다이어그램에서 나타내는 flatMap() 의 함수는 동그라미가 입력으로 들어오면 다이아몬드 두 개를 방출하는 Observable이 나오는 함수이다.
+
+위 그림의 빨간 표시 부분을 보면 Observable임을 알 수 있을 것이다.
+
+그리고 위 마블 다이어그램에서 flatMap() 함수를 표시하는 네모 박스 아래에 있는 하나의 Observable은 각 결과로 나온 Observable이 하나로 합쳐진 것을 의미한다.
+
+그렇다면 RxJava로 flatMap() 함수를 사용한 예시를 봐보자.
+
+~~~java
+public static void main(String[] args) {
+    Function<String, Observable<String>> getPicture = ball -> Observable.just(ball + "*", ball + "#");
+
+    String[] balls = {"1", "2", "3"};
+    Observable<String> source = Observable.fromArray(balls).flatMap(getPicture);
+    source.subscribe(data -> System.out.println(data));
+}
+~~~
+
+위 코드의 실행결과는 다음과 같다.
+
+![06](https://user-images.githubusercontent.com/31889335/76058757-90727080-5fc0-11ea-9076-14f1facca839.PNG)
+
+balls 배열의 각 원소가 flatMap() 함수의 입력값으로 들어갈때마다 *와 #가 붙어져 나오는 Observable이 생성되고 마지막에는 이 Observable들이 합쳐져서 위와 같은 출력결과가 나오는 것이다!
+
+<br>
+
+## 🏹 filter( ) 함수
+
+[filter()](http://reactivex.io/documentation/operators/filter.html) 함수는 Observable이 모든 item을 방출하는 것이 아니라 어떤 조건에 맞는 item만을 방출하도록 해야할 때 사용하는 함수이다.
+
+즉, Observable이 가지고 있는 item중 원하는 데이터만 걸러내는 역학을 하는 것이다.
+
+filter() 함수의 마블 다이어그램은 아래와 같다.
+
+![10](https://user-images.githubusercontent.com/31889335/76061815-b2232600-5fc7-11ea-97c7-a8ab0921a5e2.PNG)
+
+위 마블 다이어그램을 보면 filter() 함수를 더욱 쉽게 이해할 수 있을 것이다.
+
+filter() 함수의 인자로는 item을 걸러낼 조건이 정의된다.
+
+위 마블 다이어그램에 따르면 10보다 큰 수만이 filter() 함수를 통과하여 방출될 수 있다.
+
+그렇다면 RxJava를 이용하여 filter() 함수를 사용하는 예시를 봐보자.
+
+~~~java
+public static void main(String[] args) {
+    String[] objs = {"1 circle", "2 diamond", "3 triangle", "4 diamond", "5 circle", "6 hexagon"};
+
+    Observable<String> source = Observable.fromArray(objs).filter(obj -> obj.endsWith("circle"));
+    source.subscribe(System.out::println);
+}
+~~~
+
+위 코드는 배열 objs의 원소 중 마지막에 "circle" 이라는 문자열이 포함된 item만 걸러져서 나오게 하는 코드이다.
+
+이 코드의 실행결과는 다음과 같다.
+
+![11](https://user-images.githubusercontent.com/31889335/76062162-7d639e80-5fc8-11ea-9fa3-e7555bca2c15.PNG)
+
+또, 주어진 데이터 중 짝수만 골라내는 코드를 작성해보자.
+
+~~~java
+public static void main(String[] args) {
+    Integer[] data = {100, 34, 27, 99, 50};
+
+    Observable<Integer> source = Observable.fromArray(data).filter(number -> number%2 == 0);
+    source.subscribe(System.out::println);
+}
+~~~
+
+위 코드의 실행결과는
+
+![12](https://user-images.githubusercontent.com/31889335/76062356-da5f5480-5fc8-11ea-9a98-b6b2dc8bc828.PNG)
+
+이와 같이 짝수만 잘 걸러져 나옴을 알 수 있다.
+
+filter()과 같이 ReactiveX의 연산자 중 filtering Observables에 속하는 연산자는 
+
+![13](https://user-images.githubusercontent.com/31889335/76062447-11356a80-5fc9-11ea-9c0d-602335c6c862.PNG)
+
+이와 같이 다양하다.
+
+이 중 first(), last(), take(), takeLast(), skip(), skipLast() 들이 자주 사용되는 filtering 함수들이다.
+
+<br>
+
+## 🏹 reduce( ) 함수
+
+[reduce()](http://reactivex.io/documentation/operators/reduce.html) 함수는 Observable이 방출하는 각각의 item에 어떠한 함수를 적용시킨 후 마지막 결과값을 반환해주는 함수이다.
+
+reduce() 함수의 마블 다이어그램을 보고 이해해보자!
+
+![14](https://user-images.githubusercontent.com/31889335/76063057-40001080-5fca-11ea-8b59-5f7030826f90.PNG)
+
+위 다이어그램을 보면 item인 1, 2, 3, 4, 5의 모든 합인 15만이 방출되는 것을 알 수 있다.
+
+> 여기 더 해야함!!
+
+# 🥎 구구단 만들기
+
+이제 지금까지 알아본 개념들을 사용해서 구구단을 만들어보자.
+
+~~~java
+public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    System.out.println("구구단몇단? :");
+    int dan = Integer.parseInt(in.nextLine()); // 몇단인지 입력
+
+    // 1 ~ 9 까지의 int형 데이터를 item으로 방출하는 Observable 선언
+    Observable<Integer> source = Observable.range(1,9);
+    // Observable 구독시작
+    source.subscribe(row -> System.out.println(dan + " * " + row + " = " + dan*row));
+}
+~~~
+
+위 코드는 구구단을 만드는 코드이고 이 코드의 실행결과는
+
+![07](https://user-images.githubusercontent.com/31889335/76060125-ec8ac400-5fc3-11ea-876d-b489ff9d600a.PNG)
+
+이와 같다!
+
+이제 구구단을 만드는 또 다른 방법으로 flatMap() 함수를 이용해서 구구단을 만들어보자.
+
+~~~java
+public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    System.out.println("Enter your input : ");
+    int dan = Integer.parseInt(in.nextLine());
+
+    Function<Integer, Observable<String>> gugudan = num -> Observable.range(1, 9)
+            .map(row -> num + " * " + row + " = " + dan*row);
+
+    Observable<String> source = Observable.just(dan).flatMap(gugudan);
+    source.subscribe(System.out::println);
+}
+~~~
+
+위 코드의 실행결과는 다음과 같다.
+
+![08](https://user-images.githubusercontent.com/31889335/76060645-1395c580-5fc5-11ea-8b32-3677fdebb9e8.PNG)
+
+flatMap() 함수의 예시를 잘 생각해보면서 위 코드를 이해해보면 잘 이해할 수 있을 것이다.
+
+flatMap() 함수에 적용되는 함수를 따로 만들지 않고 flatMap() 의 인자로 바로 만들어보기도 해보자.
+
+~~~java
+public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    System.out.println("Enter your input : ");
+    int dan = Integer.parseInt(in.nextLine());
+
+    Observable<String> source = Observable.just(dan)
+                .flatMap(num -> Observable.range(1, 9).map(row -> num + " * " + row + " = " + dan*row));
+    source.subscribe(System.out::println);
+}
+~~~
+
+위 코드의 실행결과는 
+
+![09](https://user-images.githubusercontent.com/31889335/76061092-21981600-5fc6-11ea-9ad6-137e3ad15ed3.PNG)
+
+이와 같다.
+
+<br>
 
