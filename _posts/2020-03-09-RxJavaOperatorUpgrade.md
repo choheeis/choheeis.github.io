@@ -29,13 +29,23 @@ Rxjava를 클릭해보면 [RxJava 공식 깃헙](https://github.com/ReactiveX/Rx
 
 <br>
 
-# 🏈 생성(Creating) 연산자
+# 1️⃣ 생성(Creating) 연산자
 
 생성연산자는 데이터 흐름인 Obseravable을 생성할 때 사용하는 연산자이다.
 
 생성 연산자의 가장 단순한 연산자는 just(), from() 계열의 함수, create() 가 있다.
 
 이 외의 함수들에 대해서도 알아보자!
+
+1. intervar() 함수
+
+2. timer() 함수
+
+3. range() 함수
+
+4. defer() 함수
+
+5. repeat() 함수
 
 <br>
 
@@ -224,5 +234,374 @@ repeat() 함수의 인자에는 반복할 횟수를 넣어준다. 만약 인자�
 
 <br>
 
+# 2️⃣ 변환(Transforming) 연산자
 
+변환 연산자라는 것은 [Rx의 연산자 포스팅](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html)에서 살짝 소개했던 Rx 연산자 카테고리 중 하나이다.
+
+변환 연산자는 생성 연산자로 생성된 Observable(데이터 흐름)을 원하는 대로 변형할 수 있도록 해주는 연산자이다.
+
+1. concatMap() 함수
+
+2. switchMap() 함수
+
+3. scan() 함수
+
+4. groupBy() 함수
+
+<br>
+
+
+## 👉🏽 concatMap() 함수
+
+concatMap() 함수는 [Rx 연산자 포스팅](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html)에서 알아본 flatMap() 과 매우 비슷하다.
+
+flatMap() 은 먼저 들어온 데이터를 처리하는 도중에 새로운 데이터가 들어오면 나중에 들어온 데이터의 처리 결과가 먼저 출력될 수도 있다.
+
+이것을 interleaving(인터리빙, 끼어들기)라고도 한다.
+
+하지만 concatMap() 함수는 먼저 들어온 데이터 순서대로 처리해서 결과를 낼 수 있도록 보장해주는 함수이다.
+
+flatMap() 과 concatMap() 함수의 차이를 마블 다이어그램을 통해 알아보자.
+
+일단 먼저 flatMap() 함수의 마블 다이어그램은 다음과 같다.
+
+![16](https://user-images.githubusercontent.com/31889335/76926740-715cd280-6920-11ea-8d94-e119c1acb32b.PNG)
+
+이 마블 다이어그램을 보면 초록 동그라미 다음에 바로 파란 동그라미가 입력되므로 출력되는 Observable은 초록, 파랑, 초록 파랑 순으로 순서가 교차되게 된다.
+
+이 때, concatMap() 함수의 마블 다이어그램을 보면 concatMap() 함수의 특징을 바로 알 수 있을 것이다.
+
+![17](https://user-images.githubusercontent.com/31889335/76926858-c0a30300-6920-11ea-81f0-1abc3ed69d1c.PNG)
+
+위 마블 다이어그램이 concatMap() 함수의 마블 다이어그램인데 초록 동그라미 다음에 바로 파란 동그라미가 입력되어도 출력 Observable 에는 초록 동그라미 2개, 파란 동그라미 2개 순으로 출력되는 모습을 볼 수 있다!
+
+즉, concatMap() 함수는 먼저 들어온 데이터 순서대로 처리해주는 함수인 것이다.
+
+그렇다면 concatMap() 함수를 Rxjava로 사용한 예시를 봐보자!
+
+~~~java
+public static void main(String[] args) {
+    String balls[] = {"1", "2", "3"};
+
+    // 1, 2, 3이 차례대로 방출되는 Observable이 생성된다
+    Observable<String> source = Observable.interval(100L, TimeUnit.MILLISECONDS)
+            .map(Long::intValue).map(idx -> balls[idx])
+            .take(balls.length)
+
+            // 여기부터 1, 2, 3을 방출하는 Observable를 변형시킨다.
+            .concatMap(ball -> Observable.interval(200L, TimeUnit.MILLISECONDS)
+                .map(notUsed -> ball + "@")
+                .take(2)
+            );
+
+    source.subscribe(System.out::println);
+    try {
+         Thread.sleep(2000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+~~~
+
+위 코드의 1, 2, 3이 100ms 간격으로 발생하지만 변형시킨 Observable은 200ms 간격으로 발생하기 때문에 입력과 출력의 순서가 역적될 수 있다.
+
+하지만 그것을 concatMap() 함수로 잡아준 것이고, 위 코드의 실행결과는 
+
+![18](https://user-images.githubusercontent.com/31889335/76927541-99e5cc00-6922-11ea-9893-ed45af59612b.PNG)
+
+이와 같다!
+
+하지만 concatMap() 함수는 flatMap() 함수보다 수행 시간이 느린데 그 이유는 flatMap()은 interleaving을 허용하지만 concatMap()은 허용하지 않아 순서를 맞춰주는데 필요한 추가 시간이 들기 때문이다.
+
+<br>
+
+## 👉🏽switchMap() 함수
+
+switchMap() 함수는 concatMap() 함수처럼 순서를 보장하지만 순서를 보장하기 위해 기존에 진행 중이던 작업을 중단한다.
+
+그리고 여러 개의 값이 발행되었을 때 마지막에 들어온 값만 처리하고 싶을 때 사용하는 함수이다.
+
+일단 무슨 말인지 잘 이해가 되지 않으므로 바로 마블 다이어그램을 봐보자.
+
+![19](https://user-images.githubusercontent.com/31889335/76928219-32308080-6924-11ea-9266-dc35f5d350b1.PNG)
+
+위 마블 다이어그램을 보면 초록 동그라미가 들어오고 그 결과값으로 Observable이 나오는데 이 때 파란 동그라미가 들어와 겹치게 된다. 
+
+이 때 바로 초록 동그라미의 처리를 중단하고 파랑 동그라미를 처리하는 것을 볼 수 있다.
+
+아래 RxJava로 switchMap() 함수를 이용한 예시를 봐보자.
+
+~~~java
+public static void main(String[] args) {
+    String[] balls = {"1", "2", "3"};
+
+     Observable<String> source = Observable.interval(100L, TimeUnit.MILLISECONDS)
+            .map(Long::intValue).map(idx -> balls[idx])
+            .take(balls.length)
+
+            .switchMap(ball -> Observable.interval(200L, TimeUnit.MILLISECONDS)
+                .map(notUsed -> ball + "#")
+                .take(2)
+            );
+
+    source.subscribe(System.out::println);
+    try {
+        Thread.sleep(2000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+~~~
+
+위 코드를 보면 1, 2, 3은 100ms 씩 방출되어 새로운 Observable의 데이터 흐름이 되는데 새로운 Observable은 200ms 씩 item을 방출하는 형태이므로 3이 방출될 때 1의 출력과 겹치게 된다. 
+
+이 때, switchMap()을 사용했으므로 기존에 처리되던 1의 출력 작업은 중단되게 된다.
+
+따라서 위 코드의 출력결과는 다음과 같다.
+
+![20](https://user-images.githubusercontent.com/31889335/76928580-4759df00-6925-11ea-939d-25c624b93b36.PNG)
+
+이 switchMap() 함수는 센서의 값을 얻어와야 하는 경우에 많이 사용된다. 센서값은 중간값보다는 최종적인 값으로 결과를 처리하는 경우가 더 많기 때문이다.
+
+<br>
+
+## 👉🏽groupBy() 함수
+
+[groupBy() 함수](http://reactivex.io/documentation/operators/groupby.html) 는 원래의 Observable을 어떠한 기준을 적용시켜 두 개의 Observable로 나누어주는 함수이다.
+
+groupBy() 함수의 마블 다이어그램을 보면
+
+![21](https://user-images.githubusercontent.com/31889335/76929127-bd127a80-6926-11ea-933c-c09438c7e046.PNG)
+
+이와 같다. 이 그림을 잘 살펴보면 동그라미는 동그라미끼리 삼각형은 삼각형끼리 서로 다른 Observable로 나뉘어지는 모습을 볼 수 있다.
+
+그렇다면 RxJava로 groupBy() 함수를 사용한 예시를 봐보자!
+
+~~~java
+public static void main(String[] args) {
+    String[] objs = {"6", "4", "2-T", "2", "6-T", "4-T"};
+
+    // GroupedObservable클래스는 Observable클래스와 동일하지만 getKey()라는 메서드를 제공하여
+    // 구분된 그룹을 알 수 있게 해준다.
+    // Test::getShape은 함수형 프로그래밍에서 인자로 함수를 넣을 때 사용하는 방식 중 하나이다.
+    Observable<GroupedObservable<String, String>> source = Observable.fromArray(objs)
+            .groupBy(Test::getShape);
+
+    source.subscribe(obj -> {
+        obj.subscribe(val -> System.out.println("GROUP:" + obj.getKey() + "\t Value:" + val));
+    });
+}
+
+public static String getShape(String obj){
+    if(obj.endsWith("-T")) return "TRIANGLE";
+    else return "BALL";
+}
+~~~
+
+위 코드의 실행결과는 다음과 같다!
+
+![22](https://user-images.githubusercontent.com/31889335/76930872-d4ebfd80-692a-11ea-9aaf-52855a3e6a97.PNG)
+
+<br>
+
+## 👉🏽scan() 함수
+
+[scan() 함수](http://reactivex.io/documentation/operators/scan.html) 는 [Rx 연산자 포스팅](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html) 에서 알아본 reduce() 함수와 비슷하다.
+
+reduce() 함수는 Observable에서 모든 데이터가 입력된 후 그것을 종합하여 마지막 1개의 데이터만을 구독자에게 발했했지만 scan() 함수는 실행할 때마다 입력값에 맞는 중간 결과 및 최종 결과를 구독자에게 발행한다.
+
+일단 reduce() 함수의 마블 다이어그램을 다시 한번 봐보자.
+
+![24](https://user-images.githubusercontent.com/31889335/76931118-59d71700-692b-11ea-9178-5d13cfd8c37a.PNG)
+
+reduce() 함수는 1, 2, 3, 4, 5 라는 데이터를 모두 더해서 마지막 결과값인 15만을 구독자에게 넘겨준다.
+
+하지만 scan() 함수의 마블 다이어그램을 보면 reduce() 함수와 다른 점을 볼 수 있을 것이다.
+
+![23](https://user-images.githubusercontent.com/31889335/76931052-38762b00-692b-11ea-910d-2986788daf30.PNG)
+
+위 마블 다이어그램에서와 같이 scan() 함수는 하나의 데이터가 합쳐질 때마다 그 결과를 구독자에게 넘겨준다.
+
+즉, 마지막 데이터인 15만 넘겨지는 것이 아니라 합산된 결과를 그때 그때 넘겨주는 것이다.
+
+그렇다면 RxJava로 scan() 함수를 사용한 예시를 봐보자.
+
+~~~java
+public static void main(String[] args) {
+    String[] balls = {"1", "2", "3"};
+    Observable<String> source = Observable.fromArray(balls)
+            .scan((ball1, ball2) -> ball2 + "(" + ball1 + ")");
+    source.subscribe(System.out::println);
+}
+~~~
+
+위 코드의 실행결과는 다음과 같다.
+
+![25](https://user-images.githubusercontent.com/31889335/77033141-c6b0e680-69e9-11ea-8054-94e3a0f8df68.PNG)
+
+<br>
+
+# 3️⃣ 결합(Combining) 연산자
+
+결합 연산자라는 것은 [Rx의 연산자 포스팅](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html)에서 살짝 소개했던 Rx 연산자 카테고리 중 하나이다.
+
+위에서 보았던 생성연산자와 변환연산자는 한 개의 Observable(데이터 흐름)만을 다뤘다. 하지만 결합 연산자는 여러 개의 Observable들을 조합하여 활용하게 해준다.
+
+1. zip() 함수
+
+2. combineLatest() 함수
+
+3. merge() 함수
+
+4. concat() 함수
+
+<br>
+
+## 👉🏼 zip() 함수
+
+[zip() 함수](http://reactivex.io/documentation/operators/zip.html) 는 여러 개의 Observable이 방출하는 데이터들을 특정한 함수를 통해서 결합시켜주는 함수이다. 
+
+zip() 함수의 마블 다이어그램은 다음과 같다.
+
+![26](https://user-images.githubusercontent.com/31889335/77034382-2c52a200-69ed-11ea-9cc2-2f5a26ce70ae.PNG)
+
+이 마블 다이어그램을 살펴보면 먼저 두 개의 서로 다른 Observable이 존재하는데 결과적으로는 두 Observable에서 방출되는 item이 결합된 또 다른 새로운 Observable이 탄생한다는 것을 알 수 있다.
+
+zip() 함수의 원형을 찾아보면 다음과 같다.
+
+> Observable 클래스에 포함된 함수들을 모두 볼 수 있는 document --> [여기](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html)
+
+![27](https://user-images.githubusercontent.com/31889335/77034635-c581b880-69ed-11ea-8c0d-913d59975e74.PNG)
+
+source1, source2 는 서로 다른 Observable이고 zipper 변수는 이 두 Observable을 결합시킬 원하는 함수이다. 
+
+그렇다면 RxJava로 zip() 함수를 사용해 본 예시를 봐보자!
+
+~~~java
+public class Test {
+
+    public static final String HEXAGON = "HEXAGON";
+    public static final String OCTAGON = "OCTAGON";
+    public static final String RECTANGLE = "RECTANGLE";
+    public static final String TRIANGLE = "TRIANGLE";
+    public static final String DIAMOND = "DIAMOND";
+    public static final String PENTAGON = "PENTAGON";
+    public static final String BALL = "BALL";
+    public static final String STAR = "STAR";
+
+    public static void main(String[] args) {
+        String[] shapes = {"BALL", "PENTAGON", "STAR"};
+        String[] coloredTriangles = {"2-T", "6-T", "4-T"};
+
+        // 두 Observable을 생성하고 결합하기
+        Observable<String> source = Observable.zip(
+                Observable.fromArray(shapes).map(Test::getSuffix),
+                Observable.fromArray(coloredTriangles).map(Test::getColor),
+                (suffix, color) -> color + suffix);
+
+        source.subscribe(System.out::println);
+
+    }
+
+    // 하이푼 전까지의 문자열을 추출하는 함수
+    public static String getColor(String shape){
+        // 인자로 들어온 shape의 모양이 다이아몬드로 끝날 경우
+        if(shape.endsWith("◇")){
+            return shape.replace("◇", "").trim();
+        }
+
+        // -의 위치를 인덱스로 저장
+        int hyphen = shape.indexOf("-");
+
+        if(hyphen > 0){
+            return shape.substring(0, hyphen);
+        }
+
+        // 원의 경우
+        return shape;
+    }
+
+    public static String getSuffix(String shape){
+        if(HEXAGON.equals(shape)) return "-H";
+        if(OCTAGON.equals(shape)) return "-O";
+        if(RECTANGLE.equals(shape)) return "-R";
+        if(TRIANGLE.equals(shape)) return "-T";
+        if(DIAMOND.equals(shape)) return "◇";
+        if(PENTAGON.equals(shape)) return "-P";
+        if(STAR.equals(shape)) return "-S";
+
+        // 원의 경우
+        return "";
+    }
+
+}
+~~~
+
+위 코드의 실행결과는 다음과 같다.
+
+![28](https://user-images.githubusercontent.com/31889335/77035640-8dc84000-69f0-11ea-9469-6ee593a308aa.PNG)
+
+<br>
+
+## 👉🏼 combineLatest() 함수
+
+[combineLatest() 함수](http://reactivex.io/documentation/operators/combinelatest.html) 는 서로 다른 두 개의 Observable로부터 아이템이 방출되었을 때 각각의 Observable에서 가장 마지막으로 방출된 아이템을 특정한 함수에 적용시켜 결합시켜주는 함수이다. 
+
+또한 combineLatest() 함수의 결과로 결합된 아이템을 방출하는 또 다른 새로운 Observable이 생성된다.
+
+combineLatest() 함수의 마블 다이어그램을 봐보자!
+
+![29](https://user-images.githubusercontent.com/31889335/77036094-9a996380-69f1-11ea-9094-2fc04ba4b328.PNG)
+
+이 마블 다이어그램을 보면 combineLatest() 함수의 기능을 더욱 확실히 알 수 있을 것이다. 
+
+위 마블 다이어그램에서는 일단 서로 다른 두 개의 Observable이 존재한다.
+
+첫 번째 Observable이 1이라는 데이터를 방출하고 난 후에 두 번째 Observable이 A라는 데이터를 방출한다.
+
+그러면 이 시점에서 각 Observable에서 가장 마지막으로 방출된 것은 1과 A이므로 이 둘을 결합하면 1A가 된다.
+
+이어서 첫 번째 Observable에서 2를 방출하였다. 그러면 이 시점에서 각 Observable에서 가장 마지막으로 방출된 것은 2와 A이므로 이 둘을 결합한 것은 2A가 된다.
+
+이어서 두 번째 Observable에서 B를 방출하게 되므로 이 시점에서 각 Observable이 가장 마지막으로 방출한 것은 2와 B가 된다. 
+
+따라서 이 둘이 결합된 2B가 나오게 된다.
+
+이런 식으로 어느 Observable에서 데이터의 변경이 일어나면 그 시점에서의 가장 마지막 데이터가 무엇인지 파악하고 결합해주는 함수가 combineLatest() 함수인 것이다.
+
+이 함수의 원형도 위에서 언급한 문서에서 찾을 수 있으므로 찾아서 사용하면 된다!
+
+<br>
+
+## 👉🏼 merge() 함수
+
+[merge() 함수](http://reactivex.io/documentation/operators/merge.html) 는 여러 개의 Observable을 하나의 Observable로 결합해주는 가장 단순한 함수이다.
+
+각 Observable의 데이터를 변형하지 않고 순서대로 결합해준다.
+
+merger() 함수의 마블 다이어그램을 봐보자.
+
+![30](https://user-images.githubusercontent.com/31889335/77036604-db45ac80-69f2-11ea-853d-ea124f62a8cf.PNG)
+
+이 다이어그램을 보면 서로 다른 두 개의 Observable이 하나의 Observable로 합쳐지는데 이 때 각 Observable의 데이터가 결합되거나 변형되지 않고 순서대로 끼워 넣어지는 모습을 볼 수 있다.
+
+merge() 함수도 원형을 찾아서 인자에 무엇을 넣어야하는지 알아보고 사용하면 된다!
+
+<br>
+
+## 👉🏼 concat() 함수
+
+[concat() 함수](http://reactivex.io/documentation/operators/concat.html) 는 두 개 이상의 서로 다른 Observable들을 이어 붙여주는 기능을 하는 함수이다.
+
+concat() 함수는 서로 다른 Observable을 이어 붙일 때 interleaving(끼어들기, 인터리빙)을 하지 않고 그냥 쭈루룩 이어 붙여준다.
+
+concat() 함수의 마블 다이어그램을 봐보자.
+
+![31](https://user-images.githubusercontent.com/31889335/77036998-a5ed8e80-69f3-11ea-9bdb-c3a39ab1101d.PNG)
+
+위 마블 다이어그램을 보면 두 Observable이 item을 방출하는 시간이 겹치지만 이것을 하나의 Observable로 합칠 때는 겹치는 시간을 고려하지 않고 뒤로 이어서 붙여지는 모습을 볼 수 있다.
+
+여기서 주의할 점은 첫 번째 Observable이 onComplete 되지 않는다면 즉, Observable이 종료되지 않는다면 두 번째 Observable을 첫 번째 Observable이 끝날 때까지 계속 기다려야 하는 상황이 발생한다. 
+
+따라서 잠재적인 메모리 누수의 위험을 내포하고 있다는 것을 알아두어야 하고, 꼭 Observable이 완료될 수 있게 해야 한다.
 
