@@ -605,3 +605,208 @@ concat() 함수의 마블 다이어그램을 봐보자.
 
 따라서 잠재적인 메모리 누수의 위험을 내포하고 있다는 것을 알아두어야 하고, 꼭 Observable이 완료될 수 있게 해야 한다.
 
+concat() 함수도 원형을 찾아보고 그에 맞게 사용하면 된다!
+
+<br>
+
+
+# 4️⃣ 조건 연산자
+
+조건 연산자는 Observable의 흐름을 제어하는 역할을 하는 연산자이다. 
+
+1. amb() 함수
+
+2. takeUntil(other) 함수
+
+3. skipUntil(other) 함수
+
+4. all() 함수
+
+<br>
+
+## 👉🏻 amb() 함수
+
+[amb() 함수](http://reactivex.io/documentation/operators/amb.html) 는 ambiguous(모호한)이라는 영어 단어의 줄임말이다.
+
+이 함수는 여러 개의 Observable 중 item 방출이 가장 먼저 되는 Observable만 선택하고 나머지 Observable은 무시하는 함수이다.
+
+amb() 함수의 마블 다이어그램은 다음과 같다.
+
+![32](https://user-images.githubusercontent.com/31889335/77282919-81085c80-6d0e-11ea-81aa-c32dbf7ac65d.PNG)
+
+이 마블 다이어그램을 보면 총 3개의 Observable이 있는데 그 중 첫 번째 item 방출 시간이 가장 빠른 두 번째 Observable만 선택받고 나머지는 무시되는 모습을 볼 수 있다!
+
+amb() 함수의 원형은 다음과 같다.
+
+![33](https://user-images.githubusercontent.com/31889335/77283013-c4fb6180-6d0e-11ea-8c54-557981ed8c79.PNG)
+
+List처럼 Iterable\<Observable\<T>> 객체를 인자로 넣으면 그 중에서 가장 먼저 데이터를 발행하는 Observable만 선택해서 계속 값을 발행하도록 해준다.
+
+그렇다면 Rxjava로 amb() 함수를 사용한 예시를 봐보자!
+
+~~~java
+public class Test {
+
+    public static void main(String[] args) {
+        String[] data1 = {"1", "3", "5"};
+        String[] data2 = {"2-R", "4-R"};
+
+        // 1) sources 변수에 data1을 데이터로 발행하는 Observable과
+        //    100ms 동안 기다렸다가 data2를 데이터로 발행하는 Observable을 넣는다.
+        List<Observable<String>> sources = Arrays.asList(
+                Observable.fromArray(data1)
+                    .doOnComplete(() -> System.out.println("Observable #1 : onComplete()")),
+                Observable.fromArray(data2)
+                    .delay(100L, TimeUnit.MILLISECONDS)
+                    .doOnComplete(() -> System.out.println("Observable #2 : onComplete()"))
+        );
+
+        // 2) sources 변수를 amb() 함수의 인자로 넣는다.
+        Observable.amb(sources)
+                .doOnComplete(() -> System.out.println("Result : onComplete()"))
+                .subscribe(System.out::println);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+~~~
+
+위 코드의 실행결과는 
+
+![34](https://user-images.githubusercontent.com/31889335/77283535-f294da80-6d0f-11ea-8df8-9ca5eda14b7d.PNG)
+
+이와 같다.
+
+<br>
+
+## 👉🏻 takeUntil() 함수
+
+[takeUntil() 함수](http://reactivex.io/documentation/operators/takeuntil.html) 는 [take()](http://reactivex.io/documentation/operators/take.html) 라는 함수에 조건을 설정할 수 있는 함수이다.
+
+더 정확하게는 takeUntil() 함수의 인자로 받은 Observable에서 어떤 값을 발행하면 현재 Observable의 데이터 발행을 중단하고 즉시 완료 (onComplete) 하게 해준다.
+
+takeUntil() 함수의 마블 다이어그램을 봐보자.
+
+![35](https://user-images.githubusercontent.com/31889335/77283752-78188a80-6d10-11ea-81d7-87b554a15075.PNG)
+
+위 마블 다이어그램을 보면 알 수 있듯이 인자로 받은 걸로 보여지는 두 번째 Observable에서 첫 번째 item이 방출되는 순간 현재 Observable가 종료되는 것을 볼 수 있다.
+
+즉, take() 함수처럼 일정 개수만 값을 발행하도록 하는 대신 그 기준을 다른 Observable에서 값을 발행하는지로 판단하는 것이다.
+
+takeUntil() 함수의 원형은 다음과 같다.
+
+![36](https://user-images.githubusercontent.com/31889335/77283905-cc236f00-6d10-11ea-8a4e-c576b3006bda.PNG)
+
+즉, 마침의 기준이 되는 other Observable이 필요한 것이다!
+
+그렇다면 RxJava로 takeUntil() 함수를 사용해보자.
+
+~~~java
+public class Test {
+
+    public static void main(String[] args) {
+        String[] data = {"1", "2", "3", "4", "5", "6"};
+
+        // 1) 현재 Observable은 100L 마다 데이터를 방출한다.
+        // 2) 기준이 되는 Other Observable은 500L 마다 데이터를 방출한다.
+        Observable<String> source = Observable.fromArray(data)
+                .zipWith(Observable.interval(100L, TimeUnit.MILLISECONDS), (val, notUsed) -> val)
+                .takeUntil(Observable.timer(500L, TimeUnit.MILLISECONDS));
+
+        source.subscribe(System.out::println);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+~~~
+
+위 코드에서 기준이 되는 Other Observable은 500L 마다 데이터를 방출하므로 현재 Observable이 데이터 5를 방출할 때 처음 데이터가 방출되게 된다. 따라서 현재 Observable은 이 시점에서 종료된다.
+
+위 코드의 실행결과는 
+
+![37](https://user-images.githubusercontent.com/31889335/77284492-27a22c80-6d12-11ea-90b6-14fdbd959b83.PNG)
+
+이와 같다.
+
+<br>
+
+## 👉🏻 skipUntil() 함수
+
+[skipUntil() 함수](http://reactivex.io/documentation/operators/skipuntil.html) 는 takeUntil() 함수와 정반대의 기능을 가진 함수이다.
+
+인자로 기준이 되는 other Observable을 받는 다는 점은 같지만 skipUntil() 함수는 other Observable에서 첫 데이터를 발행할 때까지 현재 Observable이 방출하는 데이터를 무시한다.
+
+skipUntil() 함수의 마블 다이어그램은 다음과 같다.
+
+![38](https://user-images.githubusercontent.com/31889335/77284643-810a5b80-6d12-11ea-9c06-0b52e3ab24a7.PNG)
+
+위 마블 다이어그램을 보면 알 수 있듯이 skipUntil() 함수는 기준이 되는 Observable로 보이는 두 번째 Observable의 첫 데이터가 방출되기 전까지 현재 Observable에서 방출되는 데이터를 무시한다.
+
+<br>
+
+## 👉🏻 all() 함수
+
+[all() 함수](http://reactivex.io/documentation/operators/all.html) 는 방출되는 모든 item이 주어진 조건에 100% 맞을 때만 true 값을 발행하고 조건에 맞지 않는 데이터가 하나라도 발행되면 바로 false 값을 발행하는 함수이다.
+
+all() 함수의 마블 다이어그램은 다음과 같다.
+
+![39](https://user-images.githubusercontent.com/31889335/77284806-e3fbf280-6d12-11ea-818a-3221d0d170a6.PNG)
+
+위 마블 다이어그램을 보면 알 수 있듯이 all() 함수에 들어오는 모든 데이터가 10보다 작으므로 마지막에 true가 발행된 것이다.
+
+all() 함수의 원형은 다음과 같다.
+
+![40](https://user-images.githubusercontent.com/31889335/77285334-135f2f00-6d14-11ea-867f-ce50e196ba09.PNG)
+
+<br>
+
+
+# 5️⃣ 기타 연산자
+
+RxJava에는 유독 시간을 다루는 함수들이 많다.
+
+1. delay() 함수
+
+2. timeInterval() 함수
+
+<br>
+
+## 👉 delay() 함수
+
+[delay() 함수](http://reactivex.io/documentation/operators/delay.html) 는 시간을 인자로 받아서 그 시간 만큼이 지난 후로 item들을 미뤄주는 함수이다.
+
+delay() 함수의 마블 다이어그램은 다음과 같다.
+
+![41](https://user-images.githubusercontent.com/31889335/77285785-2de5d800-6d15-11ea-84ac-6a9bdfec9809.PNG)
+
+이 다이어그램을 보면 알 수 있듯이 일정 시간 후로 item 방출이 밀려있다.
+
+delay() 함수의 원형을 찾아보고 적합하게 사용하면 된다!
+
+<br>
+
+ ## 👉 timeInterval() 함수
+
+ [timeInterval() 함수](http://reactivex.io/documentation/operators/timeinterval.html) 는 어떤 데이터 값이 발행되었을 때 그 이전 값이 발행된 이후 얼마나 시간이 흘렀는지를 알려주는 함수이다. 
+
+ timeInterval() 함수의 마블 다이어그램은 다음과 같다.
+
+ ![42](https://user-images.githubusercontent.com/31889335/77285906-861cda00-6d15-11ea-8fea-90ae4f786200.PNG)
+
+ 위 마블 다이어그램에서 알 수 있듯이 timeInterval() 함수는 어떤 데이터가 발행될 때 그 이전의 시간 간격을 알려준다.
+
+ <br>
+
+ > 지금까지 Rx에서 지원하는 Observable클래스 안에 정의되어 있는 연산자(함수)들의 대장정이였다!!!
+ > 
+ > Rx에는 이것들 외에도 무수히 많은 함수들이 있으므로 함수들의 가능성을 열어두자~! 👍
+
