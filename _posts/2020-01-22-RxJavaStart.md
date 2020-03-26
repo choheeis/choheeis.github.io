@@ -7,7 +7,7 @@ categories: [RxJava]
 
 ## 🔥 RxJava가 뭘까?
 
-> RxJava에 대해 알고 싶다면 [Reactive Programming]() 포스팅을 한 번 읽고 오자! 여기에 RxJava가 무엇인지도 간단하게 언급되어 있기 때문!
+> RxJava에 대해 알아보기 전에 [Reactive Programming]() 포스팅을 한 번 읽고 오자! 
 
 <br>
 
