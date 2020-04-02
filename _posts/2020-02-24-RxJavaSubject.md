@@ -5,7 +5,7 @@ date:   2020-02-24 18:34:10 +0700
 categories: [RxJava]
 ---
 
-> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Subject 클래스 Docs](http://reactivex.io/documentation/subject.html)을 참고하여 공부한 내용입니다.😃
+> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Subject 클래스 Documentation](http://reactivex.io/documentation/subject.html)을 참고하여 공부한 내용입니다.😃
 
 <br>
 
@@ -13,7 +13,7 @@ categories: [RxJava]
 
 이전에 [Observable](https://choheeis.github.io/rxjava/2020/02/03/RxJavaObservable.html) 와 [Single](https://choheeis.github.io/rxjava/2020/02/10/RxJavaSingle.html) 에 대해 공부를 했다면!
 
-__Subject 클래스__ 라는 것도 알아보자.
+이제 __Subject 클래스__ 라는 것도 알아보자.
 
 ![01](https://user-images.githubusercontent.com/31889335/75418312-858f5e80-5976-11ea-91f8-9501a3f44111.PNG)
 
@@ -21,15 +21,17 @@ Rx 공식 문서를 보면 Subject 클래스를 다루는 배너가 있다. 파�
 
 <br>
 
-Subject는 Observable 으로도 행동할 수 있고, observer 로도 행동할 수 있는 존재이다.
+Subject는 Observable 처럼 행동할 수 있고, observer 처럼 행동할 수도 있는 존재이다.
 
-즉, Observable처럼 item을 발행할 수도 있고, observer처럼 발행된 item을 바로 처리할 수도 있는 것이다.
+즉, Observable처럼 item을 발행할 수도 있고, observer처럼 발행된 item을 받아서 바로 처리할 수도 있는 것이다.
 
-여기서 Subject는 Observable을 구독하는 존재이기도 하기 때문에 Observable이 item 방출을 시작하도록 결정할 수 있다는 의미이다. (observer가 Observable을 subscribe 하기 시작하면 Observable의 item 방출이 시작되므로! 물론 Hot Observable을 말하는 것이다.)
+따라서 Subject는 Observable을 구독하는 observer이기도 하기 때문에 Observable이 item 방출을 시작하도록 결정해 줄 수도 있다.
+
+> 여기 다시 문서 읽어보기
 
 또 이 말은 Cold Observable을 Hot Observable로 바꿀 수 있다는 의미이다.
 
-즉, 구독자의 구독 시점에 상관없이 생성된 순간부터 item을 발행하는 Cold Observable을 구독자가 구독한 시점에 item을 방출하는 Hod Observable로 바꾸어준다는 것이다.
+즉, 구독자의 구독 시점에 상관없이 생성된 순간부터 item을 발행하는 Cold Observable을 구독자가 구독한 시점에 item을 방출하는 Hot Observable로 바꾸어준다는 것이다.
 
 이 의미는 아래의 예시들을 보면 자연스럽게 이해할 수 있을 것이다!
 
