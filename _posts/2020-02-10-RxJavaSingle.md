@@ -5,12 +5,12 @@ date:   2020-02-10 18:34:10 +0700
 categories: [RxJava]
 ---
 
-> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Single 클래스 Docs](http://reactivex.io/documentation/single.html)을 참고하여 공부한 내용입니다.😃
+> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Single 클래스 Documentation](http://reactivex.io/documentation/single.html)을 참고하여 공부한 내용입니다.😃
 
 ## 🐭 Single 클래스란?
 ---
 
-RxJava에는 Single 이라는 클래스가 존재하는데 이 클래스는 앞 포스팅에서 알아본 [Observable 클래스](https://choheeis.github.io/rxjava/2020/02/03/RxJavaObservable.html)의 특수한 케이스로 개발되고 있는 클래스이다. 
+RxJava에는 Single 이라는 클래스가 존재하는데 이 클래스는 앞 포스팅에서 알아본 [Observable 클래스](https://choheeis.github.io/rxjava/2020/02/03/RxJavaObservable.html)의 특수한 케이스로 추가적으로 개발되고 있는 클래스이다. 
 
 Single 클래스는 Observable 클래스와  비슷하지만 Single 클래스 만의 특징을 가지고 있다! 
 
@@ -30,13 +30,17 @@ Observable는 item을 연속으로 무한히 발행할 수 있지만 Single 클�
 
 - __onError__
 
-    onError 함수가 호출되면 Single 클래스로 생성된 Observable이 item을 방출할 수 없게된 원인을 알 수 있다.
+    onError 함수가 호출되면 Single 클래스로 생성된 Observable이 item을 방출할 수 없게 된 원인을 알 수 있다.
 
     <br>
 
 Single Observable은 위 두 함수 중 단 하나의 함수만을 딱 한 번 호출하게 된다.
 
+item 방출에 성공할 경우에는 onSuccess 함수 하나만을 호출하고, item 방출에 실패할 경우에는 onError 함수 하나만을 호출하기 때문이다.
+
 그리고 두 함수 중 하나를 호출한 후에는 Single이 종료되고 observer와의 연결도 끊어지게 된다!
+
+<br>
 
 
 ## 🐭 Single 연산자(Operator)을 통한 Single 구성하기
@@ -53,15 +57,15 @@ Single과 관련된 다양한 연산자들은 [여기](http://reactivex.io/docum
 ## 🐭 RxJava 코드로 Single 만들어보기!
 ---
 
-Single은 Observable을 생성할 때와 비슷한 방법으로 생성할 수 있다.
+Single은 Observable을 생성하는 것과 비슷한 방법으로 생성할 수 있다.
 
 그 방법 중 just() 함수를 사용하는 방법이 있는데 다음과 같다!
 
 ~~~java
-    public static void main(String[] args) {
-        Single<String> source = Single.just("Hello Single!");
-        source.subscribe(System.out::println);
-    }
+public static void main(String[] args) {
+    Single<String> source = Single.just("Hello Single!");
+    source.subscribe(System.out::println);
+}
 ~~~
 
 위 코드는 Single을 just() 함수를 이용하여 생성한 것이고 단 하나의 item 인 "Hello Single!" 이 onSuccess 함수인 println과 함께 사용된 모습이다!
@@ -87,10 +91,10 @@ Observable에서 Single 클래스를 사용한 다양한 코드를 한 번 봐�
 <br>
 
 ~~~java
-    public static void main(String[] args) {
-        Observable<String> source = Observable.just("Hello Single");
-        Single.fromObservable(source).subscribe(System.out::println);
-    }
+public static void main(String[] args) {
+    Observable<String> source = Observable.just("Hello Single");
+    Single.fromObservable(source).subscribe(System.out::println);
+}
 ~~~
 
 위와 같은 코드에서는 먼저 String 형의 item을 발행하는 Observable을 생성하였다.
@@ -134,7 +138,7 @@ Observable에서 Single 클래스를 사용한 다양한 코드를 한 번 봐�
 
 위 3개의 추가 코드에서의 공통점은 모두 Single 객체로 변환되어 item이 단 한 개만 출력된다는 점이다!
 
-> Reactive Programming은 함수형 프로그래밍 기법을 활용하므로 Reactive 연산자를 종종 함수라고 표기하기도 한다!
+> Reactive Programming은 함수형 프로그래밍 기법을 활용하므로 Reactive 연산자를 함수라고 부르기도 한다!
 >
 > 여기까지 Single 클래스 스터디 끝!! 💗
 
