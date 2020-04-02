@@ -241,12 +241,13 @@ __onNext나 onError__ 같은 namming 패턴을 예로 들어보자. ( = on은 �
 
 Hot Observable은 Observable이 생성되자마자 item을 방출하기 시작하는 Observable을 부르는 말이다.
 
+어떤 observer가 Hot Observable을 구독한다고 가정하고, 이 observer는 Hot Observable이 생성된 시점에 구독한 것이 아니라 생성되고 나서 시간이 조금 흐른 뒤에 구독을 시작했다고 생각해보자.
 
-만약 어떤 observer가 Hot Observable을 구독한다고 가정해보자.
+이런 경우일 때, 이 observer는 자신이 구독한 시점부터 Observable이 방출하는 item을 관찰할 수 있고, 구독하기 전에 방출된 item은 관찰할 수 없게 된다.
 
-이 observer는 Hot Observable이 생성된 시점에 구독한 것이 아니라 생성되고 나서 시간이 조금 흐른 뒤에 구독을 시작했다고 해보자.
+왜냐하면 Hot Observable 은 생성된 순간부터 item 방출이 시작되므로 observer가 구독하기 이전에도 item이 방출되어졌기 때문이다!
 
-그렇다면 이 observer는 자신이 구독한 시점부터 Observable이 방출하는 item을 관찰할 수 있고, 구독하기 전에 방출된 item은 관찰할 수 없게 된다.
+<br>
 
 반면에 Cold Observable은 observer가 자신을 구독하기 시작할 때까지 item을 방출하지 않고 기다리는 Observable이다.
 
@@ -256,18 +257,18 @@ ReactiveX를 지원하는 어떤 언어에서는 Connectable Observable 이라�
 
 이 Observable은 observer가 구독하는 시점에 관계없이 Connect 함수가 호출되기 전까지는 item 방출을 하지 않는다. 
 
-정리해보면 Hot Observable은 구독자가 구독하는 시점에 상관없이 item을 발행하는 Observable 이고, Cold Observable은 구독자가 구독을 시작해야만 item을 발행하는 Observable 이라는 것이다!
+정리해보면 Hot Observable은 구독자가 구독하는 시점에 상관없이 생성된 순간부터 item을 발행하는 Observable 이고, Cold Observable은 구독자가 구독을 시작해야만 item을 발행하는 Observable 이다.
 
 <br>
 
-## 🐶 Observable 연산자(Operator)을 통해 Observable 구성하기!
+## 🐶 Observable 연산자(Operator)를 통해 Observable 구성하기!
 ---
 
-지금까지 알아본 Observable과 observer라는 개념은 ReactiveX의 시작일뿐이다!
+지금까지 알아본 Observable과 observer라는 개념은 ReactiveX의 시작일뿐이다.
 
-이 두 개념은 표준 observer 패턴을 약간 확장시킨것뿐이고, 이 두 개념으로는 callback 부분을 다룬다기 보다는 일련의 event 처리를 하는데 더 적합하다.
+이 두 개념은 표준적으로 알려져있는 observer 패턴을 약간 확장시킨것뿐이고, 이 두 개념으로 callback 부분을 다룬다기 보다는 일련의 event 처리를 하는데 더 적합하다.
 
-ReactiveX( = Reative Extension)의 진정한 힘은 __연산자(Operator)__ 에서 나온다!
+## 그리고 ReactiveX( = Reative Extension)의 진정한 힘은 __연산자(Operator)__ 에서 나온다!
 
 ReactiveX 의 연산자는 Observable이 방출하는 item들을 조작할 수 있게 해주는 존재이다.
 
@@ -277,31 +278,31 @@ ReactiveX에는 다음과 같은 Observable 관련 연산자들이 다양하게 
 
 ![02](https://user-images.githubusercontent.com/31889335/75147509-d3bb1c80-5740-11ea-8d03-14d3c4b0b7ec.PNG)
 
-따라서 각 연산자들의 설명을 보고 싶다면 [Observable Docs](http://reactivex.io/documentation/observable.html)의 하단을 참고하자!!
+따라서 각 연산자들의 설명을 보고 싶다면 [Observable Document](http://reactivex.io/documentation/observable.html)의 하단을 참고하자!!
 
 <br>
 
 ## 🐶 RxJava로 Observable 생성해보기!
 ---
 
-> ReactiveX 실습을 위해 사용한 언어는 RxJava입니당
+> ReactiveX 실습을 위해 사용한 언어는 RxJava입니다~
 
 위에서 알아본 Observable 관련 연산자 표를 보면 맨 위에 Creating Observable 과 관련된 연산자들이 나열되어 있다!
 
-즉, Observable을 생성할 때 사용되는 연산자들인 것이다!
+즉, Observable을 생성할 때 사용되는 연산자들인 것이다.
 
 [Observable 생성 관련 연산자](http://reactivex.io/documentation/operators.html#creating) 에 들어가보면 
 
 ![03](https://user-images.githubusercontent.com/31889335/75147905-bf2b5400-5741-11ea-9a8b-0d790887be78.PNG)
 
-이와 같이 새로운 Observable을 생성하는데 사용되는 연산자들이 있는 것을 알 수 있다.
+이와 같이 새로운 Observable을 생성하는데 사용되는 여러가지 연산자들이 있는 것을 볼 수 있다.
 
-이 여러 연산자들 중 just() 함수를 이용해서 새로운 Observable을 생성하는 코드를 봐보자!
+이 여러 연산자들 중 just() 함수를 이용해서 새로운 Observable을 생성하는 코드를 작성해보자.
 
 ~~~java
-    public static void main(String[] args) {
-        Observable.just(1, 2, 3, 4, 5, 6).subscribe(System.out::println);
-    }
+public static void main(String[] args) {
+    Observable.just(1, 2, 3, 4, 5, 6).subscribe(System.out::println);
+}
 ~~~
 
 이 코드는 Observable을 생성한 후 observer가 구독한 모습까지의 코드이며 실행 결과는 
@@ -329,7 +330,7 @@ onNext 함수가 호출된 결과로 println 함수가 호출되어 실행 결�
 
 <br>
 
-> 여기까지 Observable과 observer에 대한 개념 스터디 완료!! 😲
+> 여기까지 Observable과 observer에 대한 개념 스터디 끝~!! 😲
 
 
 
