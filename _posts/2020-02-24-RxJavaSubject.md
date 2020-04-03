@@ -23,21 +23,25 @@ Rx 공식 문서를 보면 Subject 클래스를 다루는 배너가 있다. 파�
 
 Subject는 Observable 처럼 행동할 수 있고, observer 처럼 행동할 수도 있는 존재이다.
 
-즉, Observable처럼 item을 발행할 수도 있고, observer처럼 발행된 item을 받아서 바로 처리할 수도 있는 것이다.
+즉, Subject는 observer이기도 하기 때문에 하나 이상의 Observable을 구독할 수도 있고, 동시에 Observable이기도 하기 때문에 구독한 Observable에게 받은 item을 다시 방출할 수도 있다.
 
-따라서 Subject는 Observable을 구독하는 observer이기도 하기 때문에 Observable이 item 방출을 시작하도록 결정해 줄 수도 있다.
+따라서 Subject는 Observable을 구독하고 있기 때문에 Observable이 item을 방출하도록 방아쇠를 당기는 역할을 한다. (Subject가 구독하는 Observable이 Cold Observable일 때를 말한다.)
 
-> 여기 다시 문서 읽어보기
+여기서 잘 생각해보면 Subject는 Cold Observable을 Hot Observable로 바꿔줄 수 있다는 것을 알 수 있다.
 
-또 이 말은 Cold Observable을 Hot Observable로 바꿀 수 있다는 의미이다.
+예를 들어, Subject가 Cold Observable을 구독하여 구독한 시점부터 방출되는 item을 얻었다고 해보자.
 
-즉, 구독자의 구독 시점에 상관없이 생성된 순간부터 item을 발행하는 Cold Observable을 구독자가 구독한 시점에 item을 방출하는 Hot Observable로 바꾸어준다는 것이다.
+Subject는 observer인 동시에 Observable이기도 하므로 Cold Observable에게 받은 item을 바로 방출하게 된다.
 
-이 의미는 아래의 예시들을 보면 자연스럽게 이해할 수 있을 것이다!
+즉, Subject가 방출하는 item은 Hot Observable이 방출하는 방식과 같이 Observable이 생성되자 마자 바로 item이 방출되는 것이다!
 
-Subject는 총 4개의 Subject로 나뉠 수 있다.
+그렇기 때문에 Subject는 Cold Observable을 Hot Observable로 바꿔준다고 할 수 있다.
 
-이 4개의 Subject는 특정한 경우에 따라서 다르게 만들어진 Subject이다.
+<br>
+
+## Subject는 총 4개의 Subject로 나뉠 수 있다!
+
+밑에서 알아볼 4개의 Subject는 특정한 경우에 따라 각기 다르게 만들어진 Subject이다.
 
 이 4개의 Subject가 ReactiveX를 구현한 모든 언어에서 사용되는 것은 아닐 수도 있고, 이름도 조금씩 바뀌어서 사용되는 경우도 있다.
 
