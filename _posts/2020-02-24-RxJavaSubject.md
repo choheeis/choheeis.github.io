@@ -51,9 +51,9 @@ Subject는 observer인 동시에 Observable이기도 하므로 Cold Observable�
 
 4개의 Subject 중 하나는 __AsyncSubject__ 이다. 
 
-AsyncSubject는 Observable이 방출한 가장 마지막 item을 방출해준다. 이 때 AsyncSubject가 이 마지막 item을 방출해주는 시점은 Observable이 다 끝난 후이다.
+AsyncSubject는 Observable이 방출한 가장 마지막 item을 방출해준다. 이 때 AsyncSubject가 이 마지막 item을 방출해주는 시점은 기존 Observable이 종료된 순간이다.
 
-밑의 마블 다이어그램을 보고 이해해보자!
+밑의 마블 다이어그램을 보고 더 이해해보자!
 
 ![02](https://user-images.githubusercontent.com/31889335/75419651-a7d6ab80-5979-11ea-8cb1-f3e18cbdf897.PNG)
 
