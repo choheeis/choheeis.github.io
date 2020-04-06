@@ -5,7 +5,7 @@ date:   2020-03-03 18:34:10 +0700
 categories: [RxJava]
 ---
 
-> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Operator Docs](http://reactivex.io/documentation/operators.html)을 참고하여 공부한 내용입니다.😃
+> ["RxJava 프로그래밍"](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=116852658)이라는 책과 [ReactiveX Operator Documentation](http://reactivex.io/documentation/operators.html)을 참고하여 공부한 내용입니다.😃
 
 <br>
 
@@ -17,19 +17,23 @@ ReactiveX 공식 홈페이지에 들어가보면 Docs 배너에 Operator 만을 
 
 이제 이 부분을 한 번 읽어보자.
 
-ReactiveX를 구현해놓은 각각의 언어들은 연산자(Operator) 집합 또한 구현해놓았다고 한다.
+<br>
 
-각각의 언어들은 이 연산자 집합을 구현할 때 겹치는 부분도 있겠지만 또 각 언어만의 연산자도 있다.
+ReactiveX를 구현해놓은 각각의 언어들은 Rx에서 사용되는 연산자(Operator) 집합 또한 구현해놓았다.
 
-또한, 각 언어들은 연산자의 이름을 이미 비슷한 역할을 하는 메소드와 비슷한 이름으로 지으려는 경향이 있다.
+각각의 언어들이 이 연산자 집합을 구현할 때 겹치는 부분도 있겠지만 또 각 언어만의 연산자도 있다.
 
-ReactiveX의 연산자들은 버전이 Rx 버전이 높아지면서 계속 늘어나고 있다.
+또한, 각 언어들은 연산자의 이름을 이미 비슷한 역할을 하는 그 언어만의 메소드와 비슷한 이름으로 지으려는 경향이 있다.
 
-또, 이 연산자들을 모두 알아야만 Reactive Programming을 할 수 있는 것도 아니니 필수 연산자들의 개념만 알아두면 된다!
+ReactiveX의 연산자들은 Rx 버전이 높아지면서 그 수가 계속 늘어나고 있다.
+
+하지만 이 연산자들을 모두 알아야만 Reactive Programming을 할 수 있는 것이 아니기 때문에 필수 연산자들의 개념만 알아두면 된다!
 
 그리고 ReactiveX 연산자들은 언어마다 기능이 크게 다르지 않아서 RxJava의 연산자 하나만 공부하면 RxKotlin이나 RxJS에서도 쉽게 사용할 수 있다.
 
-ReactiveX에서 연산자를 __함수__ 라고 부른다.
+<br>
+
+ReactiveX에서는 연산자를 __함수__ 라고 부르기도 한다!
 
 자바 관점에서는 형식적으로 Observable 클래스 안에 정의되어 있는 method 이기도 하다.
 
@@ -57,7 +61,7 @@ ReactiveX의 대부분의 연산자들은 Observable을 작동시키고 Observab
 
 # 🥎 ReactiveX의 연산자들
 
-[ReactiveX Operator Docs](http://reactivex.io/documentation/operators.html) 를 보면 모든 연산자를 분류해놓은 리스트와 각각의 상세 설명에 대해 알 수 있고, use case에 따라 어떠한 연산자를 사용하는 것이 더 좋은지를 나타내주는 dicision tree에 대해서도 볼 수 있다!
+[ReactiveX Operator Documentation](http://reactivex.io/documentation/operators.html) 를 보면 모든 연산자를 분류해놓은 리스트와 각각의 상세 설명에 대해 알 수 있고, use case에 따라 어떠한 연산자를 사용하는 것이 더 좋은지를 나타내주는 dicision tree에 대해서도 볼 수 있다!
 
 ReactiveX의 연산자를 크게 분류해보면
 
@@ -136,9 +140,7 @@ map() 함수는 Observable로부터 방출된 item을 어떠한 함수에 적용
 
 위 마블다이어그램을 봐보면 Observable이 item을 방출할 때 map() 함수 안에 있는 식에 item을 대입한 후 그 결과대로 방출해주는 모습을 볼 수 있다.
 
-즉, 조금 더 자세히 말하면 map() 함수는 원래 Observable이 방출하는 item에 개발자가 지정해준 함수를 적용시킨 __또 다른 Observable__ 을 return 한다.
-
-이렇게 return 된 Observable은 원래 Observable의 각 item들이 함수에 적용된 결과를 item으로 방출하는 Observable이다.
+조금 더 자세히 말하면 map() 함수는 Observable이 방출하는 item에 개발자가 지정해준 함수를 적용시킨 __또 다른 Observable__ 을 return 해주는 함수이다.
 
 예를 들어, String형 item을 integer형 item으로 변환할 때 map() 이 사용된다.
 
@@ -184,7 +186,7 @@ flatMap() 함수의 마블 다이어그램을 다음과 같다.
 
 위 마블 다이어그램에서 나타내는 flatMap() 의 함수는 동그라미가 입력으로 들어오면 다이아몬드 두 개를 방출하는 Observable이 나오는 함수이다.
 
-위 그림의 빨간 표시 부분을 보면 Observable임을 알 수 있을 것이다.
+위 그림의 빨간 네모 표시 부분을 보면 Observable임을 알 수 있을 것이다.
 
 그리고 위 마블 다이어그램에서 flatMap() 함수를 표시하는 네모 박스 아래에 있는 하나의 Observable은 각 결과로 나온 Observable이 하나로 합쳐진 것을 의미한다.
 
