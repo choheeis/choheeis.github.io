@@ -71,7 +71,7 @@ AsyncSubject는 Observable이 방출한 가장 마지막 item을 방출해준다
 > 
 > 위 그림의 빨간색 화살표 부분은 해당 Observable이 complete(완료)된 시점이라는 뜻이다!
 
-즉, AsyncSubject에 의해 두 구독자에게 방출되는 item은 같은 시간에 방출되는 것이다.
+즉, AsyncSubject에 의해 두 구독자에게 방출되는 item은 같은 시간에 방출된다.
 
 만약 AsyncSubject가 어떤 에러로 인해 종료되지 않는 상황이라면 AsyncSubject는 구독자들에게 어떠한 item도 방출하지 않을 것이다.
 
@@ -105,7 +105,7 @@ public static void main(String[] args) {
 
 이와 같다. 
 
-즉, AsyncSubject가 complete된 시점에 두 observer에게 모두 마지막 item인 5가 방출된 모습이라는 것을 알 수 있다.
+위 코드는 AsyncSubject가 complete된 시점에 두 observer에게 모두 마지막 item인 5가 방출된 모습을 보여준다.
 
 위 코드에서는 AsyncSubject가 Observable으로서 사용된 것이다.
 
@@ -139,9 +139,9 @@ public static void main(String[] args) {
 
 # 🐼 BehaviorSubject
 
-4개의 Subject 중 또 하나는 __BehaviorSubject__ 이다.
+4개의 Subject에 포함되는 Subject에는 __BehaviorSubject__ 라는 것이 있다.
 
-observer가 BehaviorSubject를 구독하면 구독한 시점에 BehaviorSubject는 Observable이 가장 최근에 방출했던 item을 observer에게 방출해준다.
+observer가 BehaviorSubject를 구독하면 구독한 시점에 Observable이 가장 최근에 방출했던 item을 observer에게 방출해준다.
 
 또는 가장 최근에 방출한 item이 없다면 기본값을 방출해준다.
 
@@ -204,9 +204,9 @@ PublishSubject는 observer가 자신을 구독한 시점 이후로 방출되는 
 
 여기서 주의할 점은 PublishSubject는 자신이 생성된 즉시 아이템을 방출하기 시작하기 때문에 observer는 자신이 구독하기 이전 시점에 PublishSubject에서 방출된 item들은 얻지 못한다는 점이다.
 
-만약 PublishSubject가 방출하는 모든 item을 얻고 싶다면 Observable을 생성할 때 create() 함수로 생성하거나 ReplaySubject를 사용해야 한다.
-
-create() 함수로 생성하면 PublishSubject를 조작적으로 cold Observable로 바꿀 수 있기 때문이다.
+> 만약 PublishSubject가 방출하는 모든 item을 얻고 싶다면 Observable을 생성할 때 create() 함수로 생성하거나 ReplaySubject를 사용해야 한다.
+>
+> create() 함수로 생성하면 PublishSubject를 조작적으로 cold Observable로 바꿀 수 있기 때문이다.
 
 만약 PublishSubject의 Observable이 에러와 함께 종료된다면 observer에게 더 이상 item을 줄 수 없게 된다.
 
@@ -253,7 +253,7 @@ ReplaySubject는 Observable이 방출한 모든 아이템을 자신을 구독한
 
 만약 ReplaySubject를 사용한다면 다중 스레드로부터 onNext 함수를 호출하지 않도록 주의해야한다. 왜냐하면 이런 호출이 순차적인 호출이 아닌 동시적으로 호출될 수 있기 때문이다. 
 
-동시적으로 호출되면 Observable 계약에 위배되는 것이기 때문이다.
+동시적으로 호출되면 Observable 계약에 위배되는 것이 된다.
 
 그렇다면 Rxjava로 ReplaySubject를 구현해보자.
 
@@ -274,5 +274,9 @@ ReplaySubject는 Observable이 방출한 모든 아이템을 자신을 구독한
 ![14](https://user-images.githubusercontent.com/31889335/75749103-5c027880-5d64-11ea-8e81-f280d6e66713.PNG)
 
 이와 같다.
+
+<br>
+
+> 여기까지 Subject 스터디 완료!
 
 <br>
