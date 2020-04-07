@@ -21,7 +21,7 @@ categories: [안드로이드]
 
     위 그림처럼 BottomNavigationView 라는 제목 위에 작은 글씨로 쓰여있는 부분이 있었다!
 
-    읽어보니 이 BottomNavigation은 안드로이드 26.1.0 버전부터 추가되었고, com.android.support:design:27.1.0 버전에 속해있다고 하는 것 같다.
+    읽어보니 이 BottomNavigation은 안드로이드 컴파일 버전 26.1.0 부터 추가되었고, com.android.support:design:27.1.0 버전에 속해있다고 하는 것 같다.
 
     즉, 이 BottomNavigation은 처음부터 있던 뷰가 아니라 중간에 추가된 뷰이고 안드로이드 지원 라이브러리 중 디자인 라이브러리(android.support:design)에 속해있는 뷰라는 것이다.
 
@@ -99,9 +99,9 @@ categories: [안드로이드]
 
     ![08](https://user-images.githubusercontent.com/31889335/75612118-052e5080-5b64-11ea-8082-d9d21251c0cf.PNG)
 
-    이 부분을 보고 만든 것이다!
+    저 빨간 동그라미 부분을 보고 만든 것이다!
 
-    그럼 이제 이 xml 안에 위와 같은 코드를 작성하라는 것이므로 똑같이 작성해보자.
+    이제 menu 폴더 안에 새롭게 만든 xml 에 위와 같은 코드를 똑같이 작성해보자.
 
     ![09](https://user-images.githubusercontent.com/31889335/75612140-2ee77780-5b64-11ea-9c83-85335cb1f6c7.PNG)
 
@@ -132,6 +132,8 @@ categories: [안드로이드]
     나는 Bottom Navigation Bar를 어플을 시작한 후 첫 화면에 띄울 것이기 때문에 activity_main.xml에 다음과 같이 작성하였다.
 
     ![13](https://user-images.githubusercontent.com/31889335/75619831-38083100-5bc4-11ea-91d9-6482f4fdf711.PNG)
+
+    > FrameLayout 안에 안 넣어줘도 된다!
 
     BottomNavigationView의 속성으로 이전에 만든 menu를 연결해주는 모습을 볼 수 있다!
 
