@@ -11,9 +11,11 @@ categories: [RxJava]
 
 # 🏈 ReactiveX의 Operator을 더 알아보자!
 
-ReactiveX의 연산자에 관한 이전 포스팅인 [Operator](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html) 을 보면 ReactiveX의 연산자의 종류에 대해 간단히 알 수 있다. 이 포스팅에서 볼 수 있듯이 ReactiveX 연산자의 수는 정말 많아서 카테고리를 나눠놓고 분류해 놓는다. 
+ReactiveX의 연산자에 관한 이전 포스팅인 [Operator](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html) 을 보면 ReactiveX의 연산자의 종류에 대해 간단히 알 수 있다. 
 
-이 포스팅에서는 카테고리 별로 나눠진 연산자 중 각 카테고리에는 어떤 연산자들이 있는지 조금 더 많이 알아보자!
+ReactiveX 연산자의 수는 정말 많아서 카테고리를 나누어 분류해 놓기도 한다.
+
+이 포스팅에서는 카테고리 별로 나눠진 연산자 중 각 카테고리에는 어떤 연산자들이 있는지 조금 더 많이 알아볼 것이다!
 
 연산자(=함수)를 사용하려면 연산자의 원형을 알아야한다. [ReactiveX 공식 홈페이지](http://reactivex.io/)에 들어가보니
 
@@ -27,9 +29,13 @@ Rxjava를 클릭해보면 [RxJava 공식 깃헙](https://github.com/ReactiveX/Rx
 
 위 기본 클래스 중에서 [Observable에 관련된 클래스](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html)를 들어가보면 Observable 클래스 안에 정의되어 있는 연산자들의 원형과 설명을 볼 수 있다!
 
+그럼 이제부터 각 카테고리에 속하는 연산자들을 몇 가지 알아보자.
+
 <br>
 
 # 1️⃣ 생성(Creating) 연산자
+
+Rx 연산자의 첫 번째 카테고리는 생성연산자이다.
 
 생성연산자는 데이터 흐름인 Obseravable을 생성할 때 사용하는 연산자이다.
 
@@ -37,7 +43,7 @@ Rxjava를 클릭해보면 [RxJava 공식 깃헙](https://github.com/ReactiveX/Rx
 
 이 외의 함수들에 대해서도 알아보자!
 
-1. intervar() 함수
+1. interval() 함수
 
 2. timer() 함수
 
@@ -57,7 +63,7 @@ interval() 함수의 마블 다이어그램은 다음과 같다.
 
 ![01](https://user-images.githubusercontent.com/31889335/76187987-44bb0380-621a-11ea-8af4-197bd3c86319.PNG)
 
-위 마블 다이어그램을 보면 정해준 시간의 간격에 따라 1씩 증가하는 정수가 발행되는 것을 볼 수 있다.
+위 마블 다이어그램을 보면 인자로 정해준 시간의 간격에 따라 0부터 1씩 증가하는 정수가 발행되는 것을 볼 수 있다.
 
 이 때, 발행되는 정수는 Long객체이다.
 
@@ -79,9 +85,9 @@ interval() 함수의 마블 다이어그램은 다음과 같다.
 
 이렇게 첫 번째 item이 발행되는 것도 일정 간격이 지난 후이다. 이렇게 첫 번째 item이 발행되기 전에 흐르는 일정 시간을 최초 지연 시간이라고 하는데 두 번째 원형을 통해 최초 지연 시간을 0으로 지정하면 이 시간이 없어지게 된다.
 
-따라서 두 번째 원형은 보통 초기 지연 없이 바로 데이터를 발행하기 위해 최초 지연 시간을 0으로 하기 위해 많이 사용된다.
+따라서 두 번째 원형은 보통 초기 지연 없이 바로 데이터를 발행하기 위해 최초 지연 시간을 0으로 해서 많이 사용된다.
 
-또, interval 함수는 main 쓰레드에서 실행되는 함수가 아니라 Computation(계산) 쓰레드에서 실행되는 함수이다! (이 사실도 Observable 라이브러리에서 찾을 수 있다.)
+또, interval 함수는 main 쓰레드에서 실행되는 함수가 아니라 Computation(계산) 쓰레드에서 실행되는 함수이다! (이것도 Observable 라이브러리에 명시되어 있다.)
 
 그렇다면 RxJava를 사용해서 interval() 함수를 사용한 간단한 코드를 작성해보자.
 
