@@ -273,9 +273,11 @@ flatMap() 과 concatMap() 함수의 차이를 마블 다이어그램을 통해 �
 
 ![16](https://user-images.githubusercontent.com/31889335/76926740-715cd280-6920-11ea-8d94-e119c1acb32b.PNG)
 
-이 마블 다이어그램을 보면 초록 동그라미 다음에 바로 파란 동그라미가 입력되므로 출력되는 Observable은 초록, 파랑, 초록 파랑 순으로 순서가 교차되게 된다.
+이 마블 다이어그램을 보면 초록 동그라미가 입력되어 두 개의 초록 다이아몬드가 출력되어야 하는데 두 번째 초록 다이아몬드가 출력되기 전에 파란 동그라미가 입력된 모습이다.
 
-이 때, concatMap() 함수의 마블 다이어그램을 보면 concatMap() 함수의 특징을 바로 알 수 있을 것이다.
+이 때, flatMap() 은 interleaving을 허용하므로 출력되는 Observable은 초록, 파랑, 초록 파랑 순으로 순서가 교차되게 된다.
+
+하지만 concatMap() 함수의 마블 다이어그램을 보면 concatMap() 함수만의 특징을 바로 알 수 있을 것이다.
 
 ![17](https://user-images.githubusercontent.com/31889335/76926858-c0a30300-6920-11ea-81f0-1abc3ed69d1c.PNG)
 
@@ -309,7 +311,7 @@ public static void main(String[] args) {
 }
 ~~~
 
-위 코드의 1, 2, 3이 100ms 간격으로 발생하지만 변형시킨 Observable은 200ms 간격으로 발생하기 때문에 입력과 출력의 순서가 역적될 수 있다.
+위 코드의 1, 2, 3이 100ms 간격으로 발생하지만 변형시킨 Observable은 200ms 간격으로 발생하기 때문에 입력과 출력의 순서가 역전될 수 있다.
 
 하지만 그것을 concatMap() 함수로 잡아준 것이고, 위 코드의 실행결과는 
 
@@ -317,7 +319,9 @@ public static void main(String[] args) {
 
 이와 같다!
 
-하지만 concatMap() 함수는 flatMap() 함수보다 수행 시간이 느린데 그 이유는 flatMap()은 interleaving을 허용하지만 concatMap()은 허용하지 않아 순서를 맞춰주는데 필요한 추가 시간이 들기 때문이다.
+하지만 concatMap() 함수는 flatMap() 함수보다 수행 시간이 느리다.
+
+왜냐하면 flatMap()은 interleaving을 허용하지만 concatMap()은 허용하지 않아 순서를 맞춰주는데 필요한 추가 시간이 들기 때문이다.
 
 <br>
 
@@ -325,7 +329,7 @@ public static void main(String[] args) {
 
 switchMap() 함수는 concatMap() 함수처럼 순서를 보장하지만 순서를 보장하기 위해 기존에 진행 중이던 작업을 중단한다.
 
-그리고 여러 개의 값이 발행되었을 때 마지막에 들어온 값만 처리하고 싶을 때 사용하는 함수이다.
+따라서 여러 개의 값이 발행되었을 때 마지막에 들어온 값만 처리하고 싶을 때 사용하는 함수이다.
 
 일단 무슨 말인지 잘 이해가 되지 않으므로 바로 마블 다이어그램을 봐보자.
 
@@ -333,7 +337,7 @@ switchMap() 함수는 concatMap() 함수처럼 순서를 보장하지만 순서�
 
 위 마블 다이어그램을 보면 초록 동그라미가 들어오고 그 결과값으로 Observable이 나오는데 이 때 파란 동그라미가 들어와 겹치게 된다. 
 
-이 때 바로 초록 동그라미의 처리를 중단하고 파랑 동그라미를 처리하는 것을 볼 수 있다.
+그러면 초록 사각형 발행을 중단하고 파랑 다이아몬드를 처리하는 것을 볼 수 있다.
 
 아래 RxJava로 switchMap() 함수를 이용한 예시를 봐보자.
 
@@ -359,7 +363,7 @@ public static void main(String[] args) {
 }
 ~~~
 
-위 코드를 보면 1, 2, 3은 100ms 씩 방출되어 새로운 Observable의 데이터 흐름이 되는데 새로운 Observable은 200ms 씩 item을 방출하는 형태이므로 3이 방출될 때 1의 출력과 겹치게 된다. 
+위 코드를 보면 1, 2, 3이 100ms 시간 간격에 따라 하나씩 방출되어 새로운 Observable의 데이터 흐름이 되는데 새로운 Observable은 200ms 씩 item을 방출하는 형태이므로 3이 방출될 때 1의 출력과 겹치게 된다. 
 
 이 때, switchMap()을 사용했으므로 기존에 처리되던 1의 출력 작업은 중단되게 된다.
 
@@ -414,7 +418,7 @@ public static String getShape(String obj){
 
 [scan() 함수](http://reactivex.io/documentation/operators/scan.html) 는 [Rx 연산자 포스팅](https://choheeis.github.io/rxjava/2020/03/03/RxJavaOperator.html) 에서 알아본 reduce() 함수와 비슷하다.
 
-reduce() 함수는 Observable에서 모든 데이터가 입력된 후 그것을 종합하여 마지막 1개의 데이터만을 구독자에게 발했했지만 scan() 함수는 실행할 때마다 입력값에 맞는 중간 결과 및 최종 결과를 구독자에게 발행한다.
+reduce() 함수는 Observable에서 모든 데이터가 입력된 후 그것을 종합하여 마지막 1개의 데이터만을 구독자에게 발행했지만 scan() 함수는 실행할 때마다 입력값에 맞는 중간 결과 및 최종 결과를 구독자에게 발행한다.
 
 일단 reduce() 함수의 마블 다이어그램을 다시 한번 봐보자.
 
@@ -585,7 +589,7 @@ combineLatest() 함수의 마블 다이어그램을 봐보자!
 
 각 Observable의 데이터를 변형하지 않고 순서대로 결합해준다.
 
-merger() 함수의 마블 다이어그램을 봐보자.
+merge() 함수의 마블 다이어그램을 봐보자.
 
 ![30](https://user-images.githubusercontent.com/31889335/77036604-db45ac80-69f2-11ea-853d-ea124f62a8cf.PNG)
 
@@ -749,7 +753,7 @@ public class Test {
 
 [skipUntil() 함수](http://reactivex.io/documentation/operators/skipuntil.html) 는 takeUntil() 함수와 정반대의 기능을 가진 함수이다.
 
-인자로 기준이 되는 other Observable을 받는 다는 점은 같지만 skipUntil() 함수는 other Observable에서 첫 데이터를 발행할 때까지 현재 Observable이 방출하는 데이터를 무시한다.
+인자로 기준이 되는 other Observable을 받는다는 점은 같지만 skipUntil() 함수는 other Observable에서 첫 데이터를 발행할 때까지 현재 Observable이 방출하는 데이터를 무시한다.
 
 skipUntil() 함수의 마블 다이어그램은 다음과 같다.
 
@@ -800,19 +804,19 @@ delay() 함수의 원형을 찾아보고 적합하게 사용하면 된다!
 
 <br>
 
- ## 👉 timeInterval() 함수
+## 👉 timeInterval() 함수
 
- [timeInterval() 함수](http://reactivex.io/documentation/operators/timeinterval.html) 는 어떤 데이터 값이 발행되었을 때 그 이전 값이 발행된 이후 얼마나 시간이 흘렀는지를 알려주는 함수이다. 
+[timeInterval() 함수](http://reactivex.io/documentation/operators/timeinterval.html) 는 어떤 데이터 값이 발행되었을 때 그 이전 값이 발행된 이후 얼마나 시간이 흘렀는지를 알려주는 함수이다. 
 
- timeInterval() 함수의 마블 다이어그램은 다음과 같다.
+timeInterval() 함수의 마블 다이어그램은 다음과 같다.
 
- ![42](https://user-images.githubusercontent.com/31889335/77285906-861cda00-6d15-11ea-8fea-90ae4f786200.PNG)
+![42](https://user-images.githubusercontent.com/31889335/77285906-861cda00-6d15-11ea-8fea-90ae4f786200.PNG)
 
- 위 마블 다이어그램에서 알 수 있듯이 timeInterval() 함수는 어떤 데이터가 발행될 때 그 이전의 시간 간격을 알려준다.
+위 마블 다이어그램에서 알 수 있듯이 timeInterval() 함수는 어떤 데이터가 발행될 때 그 이전의 시간 간격을 알려준다.
 
- <br>
+<br>
 
- > 지금까지 Rx에서 지원하는 Observable클래스 안에 정의되어 있는 연산자(함수)들의 대장정이였다!!!
- > 
- > Rx에는 이것들 외에도 무수히 많은 함수들이 있으므로 함수들의 가능성을 열어두자~! 👍
+> 지금까지 Rx에서 지원하는 Observable클래스 안에 정의되어 있는 연산자(함수)들의 대장정이였다!!!
+> 
+> Rx에는 이것들 외에도 무수히 많은 함수들이 있으므로 사용할 수 있는 함수들의 가능성을 열어두자~! 👍
 
