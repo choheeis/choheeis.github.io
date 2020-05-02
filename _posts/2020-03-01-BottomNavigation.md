@@ -125,7 +125,7 @@ categories: [안드로이드]
 
 2. __BottomNavigationView라는 레이아웃 추가하기__
 
-    [머티리얼 디자인 가이드 BottomNavigation](https://material.io/develop/android/components/bottom-navigation-view/) 에서는 다음과 같은 형식으로 BottomNavigationView 레이아웃을 추가하라고 되어있다.
+    [머티리얼 디자인 가이드 BottomNavigation](https://material.io/components/bottom-navigation) 에서는 다음과 같은 형식으로 BottomNavigationView 레이아웃을 추가하라고 되어있다.
 
     ![12](https://user-images.githubusercontent.com/31889335/75612342-ddd88300-5b65-11ea-9c5a-8323881e0b83.PNG)
 
