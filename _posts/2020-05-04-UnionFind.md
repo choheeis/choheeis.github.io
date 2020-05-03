@@ -122,16 +122,16 @@ int getParent(int parent[], int x){
 	}
 }
 
-// 부모 노드가 같을 때 합치는 함수
+// 두 노드를 연결해주는 함수
 int unionParent(int parent[], int a, int b){
 	a = getParent(parent, a);
 	b = getParent(parent, b);
 	
 	// 더 작은 노드로 부모 노드를 설정 	
 	if(a < b){
-		parent[b] = a;
+		return parent[b] = a;
 	}else{
-		parent[a] = b;
+		return parent[a] = b;
 	}
 } 
 
