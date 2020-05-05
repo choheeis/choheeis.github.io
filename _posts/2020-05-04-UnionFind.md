@@ -115,6 +115,7 @@ using namespace std;
 int getParent(int parent[], int x){
 	if(parent[x] == x){
 		// x의 부모 노드가 자기 자신인 경우 부모 노드(자기 자신) 반환 
+		// 재귀 종료 조건 
 		return x; 
 	}else{
 		// 재귀 호출로 부모 노드의 부모 노드를 재귀적으로 찾음.  
@@ -122,7 +123,7 @@ int getParent(int parent[], int x){
 	}
 }
 
-// 두 노드를 연결해주는 함수
+// 부모 노드가 다른 두 노드를 연결해주는 함수 (그래프 상에서 두 노드를 연결해주는 선을 그어주는 함수)
 int unionParent(int parent[], int a, int b){
 	a = getParent(parent, a);
 	b = getParent(parent, b);
