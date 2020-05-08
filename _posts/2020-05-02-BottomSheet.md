@@ -128,6 +128,8 @@ Modal Bottom Sheet는 __BottomSheetDialogFragment__ 라고도 부른다는 것�
 
     MainActivity.kt 의 onCreate 함수 안에 다음과 같은 클릭 리스너를 작성하면 된다.
 
+    ![11](https://user-images.githubusercontent.com/31889335/81403244-efde2f80-916d-11ea-9a3e-6be91da1b2f2.PNG)
+
     이 때, 상속한 BottomSheetDialogFragment 클래스의 멤버 함수인 show() 를 사용하게 된다.
 
     여기까지 작성한 후, 프로젝트를 build 해보면
