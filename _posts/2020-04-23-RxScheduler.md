@@ -226,10 +226,199 @@ Rx를 사용하면 특정 스케줄러를 사용하다가 다양한 다른 스�
 
 RxJava에서 제공하는 스케줄러는 io.reactivex.schedulers 패키지의 Schedulers 클래스의 정적 팩토리 메서드로 생성할 수 있다.
 
+따라서 Rxjava로 스케줄러를 사용하고 싶다면
+
+~~~java
+import io.reactivex.rxjava3.schedulers.Schedulers;
+~~~
+
+위와 같이 schedulers 패키지의 Schedulers 클래스를 import 해야 한다.
+
 > RxJava의 버전에 따라 지원하는 스케줄러가 있고 지원하지 않는 스케줄러가 있으니 버전을 잘 확인하자!
 
+<br>
 
+1️⃣ newThread(뉴 쓰레드) 스케줄러
+---
 
+[Schedulers 클래스 Docs](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/schedulers/Schedulers.html) 를 참고하여 공부해보자.
+
+위 문서에는 Schedulers 라는 이름의 클래스에 정의된 여러 스케줄러 호출 함수들을 볼 수 있다.
+
+그 중 __newThread()__ 라는 함수에 대해서 알아보자.
+
+이 함수는 이름처럼 새로운 스레드를 생성할 때 호출하는 함수이다.
+
+새로운 스레드를 만들어 어떤 동작을 실행하고 싶을 때 Schedulers.newThread() 함수를 인자로 넣어주면 되고, 이 뉴 쓰레드 스케줄러 함수는 요청을 받을 때마다 새로운 스레드를 생성해준다.
+
+아래 코드는 newThread() 함수를 subscribeOn() 연산자의 인자로 넣어 새로운 쓰레드를 생성하고 그 안에서 작업을 하는 코드이다.
+
+~~~java
+public class Test {
+
+    public static void main(String[] args) {
+        String[] orgs = {"1", "2", "3"};
+        Observable.fromArray(orgs)
+                .map(data -> "<<" + data + ">>")
+                .doOnNext(data -> System.out.println("Original Data : " + data))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(Test::getThread);
+        try {
+            sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Observable.fromArray(orgs)
+                .map(data -> "##" + data + "##")
+                .doOnNext(data -> System.out.println("Original Data : " + data))
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(Test::getThread);
+        try {
+            sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getThread(Object obj){
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+~~~
+
+![07](https://user-images.githubusercontent.com/31889335/81553393-f5cb4f00-93bf-11ea-815b-ad6960cdbc9e.PNG)
+
+위 코드를 실행시키면 이와 같은 출력 결과가 나온다. 쓰레드 이름으로 보아 main 쓰레드가 아닌 새로운 1번 쓰레드와 2번 쓰레드에서 각각 동작이 실행된 것을 볼 수 있다.
+
+newThread() 함수를 통해 새로운 쓰레드 생성을 호출하는 방법은 적극적으로 추천하는 방법은 아니다.
+
+왜냐하면 RxJava에는 newThread() 스케줄러 보다 활용도가 높은 계산 스케줄러와 IO 스케줄러 같은 것이 있기 때문이다.
+
+<br>
+
+2️⃣ 계산 스케줄러
+---
+
+![09](https://user-images.githubusercontent.com/31889335/81554052-13e57f00-93c1-11ea-9225-f1bc8b74c13c.PNG)
+
+Rx 연산자를 공부하면서 알게 된 interval() 이라는 함수는 사실 기본적으로 계산 스케줄러에서 동작하는 함수이다.
+
+interval() 함수의 원형을 보면 SchedulerSupport 어노테이션을 통해 computation 스케줄러에서 실행된다는 사실을 알 수 있다.
+
+![08](https://user-images.githubusercontent.com/31889335/81553956-ebf61b80-93c0-11ea-9339-21a149b7d93a.PNG)
+
+물론 위처럼 같은 interval() 함수여도 오버로드되어 스케줄러를 custom 할 수 있는 함수도 있다.
+
+계산 스케줄러를 사용하면 '계산' 작업을 할 때 대기 시간 없이 빠르게 결과를 도출할 수 있게 된다.
+
+계산 작업은 I/O(입출력) 작업이 아닌 작업이라고 생각하면 된다.
+
+계산 스케줄러는 Schedulers.compatation() 함수를 통해 호출할 수 있다.
+
+<br>
+
+3️⃣ IO 스케줄러
+---
+
+IO 스케줄러는 네트워크 요청을 처리하거나 데이터 베이스 쿼리 작업을 하거나 각종 입출력 작업을 실행하기 위한 스케줄러이다.
+
+계산 스케줄러와 IO 스케줄러의 가장 큰 차이점은 생성되는 스레드 개수가 다르다는 것이다.
+
+계산 스케줄러는 CPU 개수만큼 스레드를 생성하지만 IO 스케줄러는 필요할 때 마다 스레드를 계속 생성한다.
+
+또한, 입출력 작업은 비동기로 실행하여도 결과를 얻기까지 대기 시간이 길다는 특징이 있다.
+
+IO 스케줄러는 Schedulers.io() 함수를 호출함으로써 생성할 수 있다.
+
+<br>
+
+4️⃣ 트램펄린(Trampoline) 스케줄러
+---
+
+트램펄린 스케줄러는 새로운 스레드를 생성하지 않고 현재 스레드에 무한한 크기의 대기 행렬(큐)을 생성하는 스케줄러이다.
+
+~~~java
+public class Test {
+
+    public static void main(String[] args) {
+        String[] orgs = {"1", "2", "3"};
+        Observable<String> source = Observable.fromArray(orgs);
+
+        source.subscribeOn(Schedulers.trampoline())
+                .map(data -> "<<" + data + ">>")
+                .subscribe(Test::getThread);
+
+        source.subscribeOn(Schedulers.trampoline())
+                .map(data -> "##" + data + "##")
+                .subscribe(Test::getThread);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getThread(Object obj){
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+~~~
+
+위 코드는 main 쓰레드를 트램펄린 스케줄러를 통해 길게 늘려준 것이다.
+
+![10](https://user-images.githubusercontent.com/31889335/81556200-e4d10c80-93c4-11ea-8200-8271f5322297.PNG)
+
+이렇게 하면 새로운 스레드를 생성하지 않고 main 스레드에서 모든 작업을 실행한다.
+
+대기 행렬인 큐에 작업을 넣은 후 1개씩 꺼내어 동작하므로 첫 번째 구독과 두 번쨰 구독 순서가 바뀌는 경우는 발생하지 않는다.
+
+<br>
+
+5️⃣ 싱글 스레드 스케줄러
+---
+
+싱글 스레드 스케줄러는 RxJava 내부에서 단일 스레드를 별도로 생성하여 작업을 처리할 때 사용하는 스케줄러이다.
+
+싱글 스레드는 여러 번 생성 요청이 와도 하나의 스레드를 공통으로 사용한다는 점이 특징이다.
+
+~~~java
+public class Test {
+
+    public static void main(String[] args) {
+        Observable<Integer> numbers = Observable.range(100, 5);
+        Observable<Integer> chars = Observable.range(0, 5);
+
+        numbers.subscribeOn(Schedulers.single())
+                .subscribe(Test::getThread);
+        chars.subscribeOn(Schedulers.single())
+                .subscribe(Test::getThread);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getThread(Object obj){
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+~~~
+
+위 코드는 두 개의 Observable에 대한 subscribe 작업을 single 스레드에서 처리한 코드이다.
+
+![11](https://user-images.githubusercontent.com/31889335/81556955-23b39200-93c6-11ea-840a-e1384d98dded.PNG)
+
+위 코드의 출력결과는 위와 같다. main 쓰레드가 아닌 새로운 스레드에서 작업되는 모습을 볼 수 있다.
+
+싱글 스레드 스케줄러를 생성하면 여러 개의 Observable 이 있어도 별도로 마련된 단일 스레드에서 작업이 차례대로 실행된다.
+
+<br>
+
+## 🧾 Scheduler 로 콜백 지옥(callback hell) 벗어나기
+---
 
 
 
