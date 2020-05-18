@@ -420,7 +420,120 @@ public class Test {
 ## 🧾 Scheduler 로 콜백 지옥(callback hell) 벗어나기
 ---
 
+Rx 프로그래밍을 이용하면 서버와 통신하는 네트워크 프로그래밍을 할 때 빈번히 발생하는 __콜백 지옥__ 을 해결할 수 있다.
 
+일단 Rx의 스케줄러를 이용했을 때 장점을 다시 한번 짚어보자.
 
+스케줄러를 이용하면 스레드를 생성하는 것과 같은 비동기 프로그래밍을 해야 할 경우 Callable, Runnable 객체를 실행하는 코드는 필요 없다. 
 
+따라서 Reactive Programming 은 서버와 통신하는 비동기 프로그래밍을 작성할 때 가장 큰 힘을 발휘한다.
+
+<br>
+
+그렇다면 __콜백 지옥이 뭔지__ 에 대해서 알아보자.
+
+예를 들어, 다음과 같이 서버에 http 요청을 하는 java 코드가 있다고 가정해보자.(OkHttp3기반)
+
+~~~java
+Request request = new Request.Builder()
+    .url("https://~~~")
+    .build();
+
+Client.newCall(request).enqueue(new Callback()){
+
+    // 서버 통신 실패시 호출
+    @Override
+    public void onFailure(Call call, IOException e){
+        e.printStackTrace();
+    }
+
+    // 서버 통신 성공시 호출
+    @Override
+    public void onResponse(Call call, Response response) throws IOException{
+        Log.i(response.body().string());
+    }
+}
+~~~
+
+이처럼 서버 통신에 사용할 코드에는 기본적으로 성공할 경우와 실패할 경우를 나눠 각각 콜백함수로 작성하곤 한다.
+
+만약 위 코드에서 서버 통신에 성공할 경우에 또 다른 URL로 서버 통신을 하고 싶다고 가정해보자.
+
+즉, 서버 통신을 중첩해야 해결되는 기능이 있는 것이다.
+
+![12](https://user-images.githubusercontent.com/31889335/81897980-ab7de400-95f2-11ea-8b4a-c4bfd6e458c0.PNG)
+
+위 코드만 봐도 콜백 함수를 4번 작성해야 하는 걸 알 수 있다.
+
+하지만 두 번째 서버 통신 성공 시 한 번 더 서버 통신을 해야 한다면??
+
+콜백함수가 총 6개가 생길 것이다.
+
+이 결과 코드의 가독성이 떨어지고 정상적인 로직과 예외 처리도 섞여있을 가능성이 크다.
+
+이런 현상을 콜백지옥(Callback Hell)이라고 한다.
+
+<br>
+
+하지만 이러한 콜백지옥을 Rx 스케줄러를 이용하면 해결할 수 있다.
+
+아래 코드는 RxJava로 콜백 지옥을 해결한 모습을 보여줄 것이다.
+
+~~~java
+Observable<String> source = Observable.just("https://~~~")
+    .subscribeOn(Schedulers.io())
+    .map(OkHttpHelper::get)
+    .concatWith(Observable.just("https://~~두번째URL")
+        .map(OkHttpHelper::get));
+source.subscribe();
+~~~
+
+IO 스케줄러를 이용해 네크워크 처리를 할 것이라는 것을 subscribeOn() 연산자를 통해 명시하였고, concatWith() 함수를 통해 현재의 Observable에 새로운 Observable을 결합하여 해결하였다.
+
+위 코드는 OkHttpHelper클래스의 get() 함수에는 서버 통신에 필요한 enqueue() 메소드가 정의되어 있다고 가정한 코드이다.
+
+이처럼 Rx 스케줄러로 네트워크 통신을 처리하면 비즈니스 로직과 비동기 프로그래밍을 분리할 수 있어 프로그램의 효율을 향상시킬 수 있다.
+
+<br>
+
+## 🧾 observeOn() 함수 사용하기
+---
+
+지금까지는 subscribeOn() 함수를 통해 스케줄러를 사용한 예시만 공부했었다.
+
+그러나 스케줄러의 핵심은 스케줄러의 종류를 선택한 후 subscribeOn() 과 observeOn() 함수를 호출하는 것이다.
+
+스케줄러 초반에 알아본 아래 마블 다이어그램으로 다시 한번 subscribeOn() 과 observeOn() 의 차이를 짚어보자.
+
+![13](https://user-images.githubusercontent.com/31889335/81899016-d406dd80-95f4-11ea-8ac4-300668e6b370.PNG)
+
+<br>
+
+- subscribeOn() 함수는 Observable에서 구독자가 subscribe() 함수를 호출했을 때 데이터 흐름을 발행하는 스레드를 지정해주는 함수이다.
+
+    subscribeOn() 함수는 처음 지정한 스레드를 고정시키므로 다시 subscribeOn() 함수를 호출해도 두 번째 subsribeOn() 함수는 무시한다는 특징이 있다.
+
+- 반면 observeOn() 함수는 처리된 결과를 구독자에게 전달하는 스레드를 지정해주는 함수이다.
+
+<br>
+
+일단 위 마블 다이어그램에서 가장 먼저 나오는 subsribeOn() 함수는 파란색 스레드를 인자로 가지고 있다.
+
+즉, 위 Observable을 구독자가 subscribe 하면 데이터를 발행하는 스레드는 파란색 스레드로 고정된다는 의미이다.
+
+그렇다면 위 다이어그램에서 가장 먼저 나오는 observeOn() 함수는 주황색 스레드를 인자로 가지고 있다.
+
+즉, observeOn()이 호출된 후부터는 주황색 스레드에서 작업이 실행된다는 의미이다.
+
+따라서 마블 다이어그램의 map() 함수는 스레드 변경과는 상관 없는 함수이므로 계속 주황색 스레드에서 실행이 된다.
+
+마지막으로 분홍색 스레드를 인자로 갖는 observeOn() 이 호출되면 그 다음 데이터 흐름은 분홍색 스레드에서 실행된다.
+
+<br>
+
+지금까지 Rx 프로그래밍의 스케줄러에 대해서 공부해보았다.
+
+안드로이드 앱과 같은 UI 프로그래밍을 하려면 스케줄러에 대한 이해가 필수적이고, 특히 observeOn() 함수가 매우 유용하다!!
+
+<br>
 
