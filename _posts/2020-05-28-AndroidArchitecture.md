@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[안드로이드] 🔨 Android 프로젝트에서 사용되는 아키텍처"
+title:  "[안드로이드] 🔨 Android 프로젝트에서 사용되는 아키텍처(1탄)"
 date:   2020-05-28 18:34:10 +0700
 categories: [안드로이드]
 ---
@@ -10,7 +10,7 @@ categories: [안드로이드]
 ## 🔨 안드로이드 app Architecture
 ---
 
-[Android Jetpack이 뭐지?](https://choheeis.github.io/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/2020/05/25/jetpack.html) 포스팅에서 Jetpack이 지원하는 것 중 Architecture에 대한 것이 있었다!
+[Android Jetpack이 뭐지?](https://choheeis.github.io/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C/2020/05/25/jetpack.html)에 대한 포스팅에서 Jetpack이 지원하는 것 중 Architecture에 대한 것이 있었다!
 
 jetpack 라이브러리들 중 Architecture 카테고리로 분류되어 있는 것들에는
 
@@ -22,11 +22,9 @@ Jetpack에서 지원하는 이런 라이브러리들을 사용해서 안드로�
 
 안드로이드에서 추천하는 아키텍처는 어떤 모습인지 [앱 아키텍처 가이드](https://developer.android.com/jetpack/docs/guide) 문서를 읽어보고 알아보자!
 
-이 문서에서 제시하는 안드로이드 아키텍처는 고품질의 강력한 앱을 빌드하기 위한 권장 아키텍처이다. 
+이 문서에서는 고품질의 강력한 앱을 빌드하기 위한 권장 아키텍처를 알 수 있을 것이다.
 
-<br>
-
-안드로이드 권장 아키텍처를 본격적으로 살펴보기 전에 모바일 앱 사용자 환경에 대해 살짝 알아보자.
+먼저 안드로이드 권장 아키텍처를 본격적으로 살펴보기 전에 모바일 앱 사용자 환경에 대해 살짝 알아보자.
 
 <br>
 
@@ -92,9 +90,9 @@ Activity와 Fragment 클래스는 Android 운영체제와 Application(앱) 사�
 
 <br>
 
-__두 번째 원칙! "Model(모델)에서 UI 만들기"__
+__두 번째 원칙! "Model(모델)과 UI 분리하기"__
 
-안드로이드 앱 아키텍처 원칙 중 두 번째로 중요한 원칙은 모델에서 UI를 만들어야 한다는 것이다.
+안드로이드 앱 아키텍처 원칙 중 두 번째로 중요한 원칙은 모델과 UI를 분리해야 한다는 것이다.
 
 모델은 __앱의 데이터 처리를 담당하는 구성요소__ 로, 앱의 View 객체 및 앱 구성요소와 독립되어 있는 존재이다.
 
@@ -131,7 +129,7 @@ __두 번째 원칙! "Model(모델)에서 UI 만들기"__
 
 <br>
 
-__1. 사용자 프로필 UI 만들기__
+__1️⃣. 사용자 프로필 UI 만들기__
 
 이 예시에서 UI는 user_profile_layout.xml 이라는 xml 파일과 UserProfileFragment 라는 클래스로 구성된다고 생각하자.
 
@@ -147,7 +145,7 @@ UI 안에 들어갈 정보들은 아래와 같이 총 두 가지라고 가정해
 
 <br>
 
-__2. ViewModel 클래스 만들기__
+__2️⃣. ViewModel 클래스 만들기__
 
 위에서 본 다이어그램을 보면 Activity/Fragment 아래 단계에 ViewModel이 있는 것을 볼 수 있다.
 
@@ -171,6 +169,8 @@ __ViewModel은 UI 구성요소에 관한 데이터를 제공하고 Model과 커�
 
 - user_profile.xml : 화면의 UI 레이아웃 정의 파일
 
+- UserProfileViewModel : UserProfileFragment 에서 데이터를 띄워줄 데이터를 준비하고 사용자 상호작용에 반응하는 클래스
+
     ~~~kotlin
     class UserProfileViewModel : ViewModel() {
         // TODO() 는 원하는 작업 코드를 작성하라는 의미.
@@ -178,8 +178,6 @@ __ViewModel은 UI 구성요소에 관한 데이터를 제공하고 Model과 커�
        val user : User = TODO()
     }
     ~~~
-
-- UserProfileViewModel : UserProfileFragment 에서 데이터를 띄워줄 데이터를 준비하고 사용자 상호작용에 반응하는 클래스
 
 - UserProfileFragment : 데이터를 표시하는 UI 컨트롤러
 
@@ -212,23 +210,17 @@ __ViewModel은 UI 구성요소에 관한 데이터를 제공하고 Model과 커�
 
 우리는 SavedState 모듈을 사용하는 걸로 해보자!
 
-SavedState 모듈을 사용하기 위해 다음과 같이 UserProfileViewModel 클래스에 코드를 추가해보자.
+SavedState 모듈을 사용하기 위해 다음과 같이 UserProfileViewModel 클래스를 다음과 같이 수정해보자.
 
 ~~~kotlin
+// 클래스 생성 인자로 savedStateHandle을 갖는다
 class UserProfileFragment : Fragment() {
     private val viewModel: UserProfileViewModel by viewModels() {
         val userId : String = savedStateHandle["uid"] ?:
               throw IllegalArgumentException("missing user id")
-       val user : User = TODO()
+        val user : User = TODO()
     }
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View {
-            return inflater.inflate(R.layout.user_profile, container, false)
-        }
-    }
+}
 ~~~
 
 또 이 ViewModel 클래스를 Fragment 클래스에서 사용하도록 해야하므로 UserProfileFragment 클래스에 다음과 같은 코드를 추가하자.
@@ -236,8 +228,7 @@ class UserProfileFragment : Fragment() {
 ~~~kotlin
 private val viewModel: UserProfileViewModel by viewModels(
        factoryProducer = { SavedStateVMFactory(this) }
-       ...
-    )
+)
 ~~~
 
 여기까지는 userId를 사용하기 위해 ViewModel과 UI에 코드를 추가한 것이였다.
@@ -268,7 +259,7 @@ class UserProfileViewModel(
 
 또 LiveData를 사용하면 수명 주기를 인식하기 떄문에 더 이상 필요하지 않은 참조를 자동으로 정리한다.
 
-이 다음으로 데이터를 관찰하고 UI를 업데이트하도록 UserProfileFragment 클래스에 다음과 같은 코드를 추가하자.
+이 다음으로 LiveData 데이터를 관찰하고 UI를 업데이트하도록 UserProfileFragment 클래스의 onViewCreated 함수 안에 다음과 같은 코드를 추가하자.
 
 ~~~kotlin
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -279,7 +270,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 }
 ~~~
 
-위 코드로 인해 사용자 프로필 데이터가 업데이트될 떄마다 onChanged() 콜백이 호출되고 UI가 새로고침된다!
+위 코드로 인해 사용자 프로필 데이터가 업데이트될 떄마다 onChanged() 콜백이 호출되고 UI가 새로고침될 것이다.
 
 LiveData는 수명 주기를 자동으로 관찰하고 있다고 했으므로 onStop() 메소드 같은 수명주기에 관련된 메소드를 재정의하지 않아도 된다.
 
@@ -291,8 +282,190 @@ LiveData는 수명 주기를 자동으로 관찰하고 있다고 했으므로 on
 
 <br>
 
-__3. 데이터 가져오기__
+__3️⃣. 데이터 가져오기__
 
+위에서 LiveData를 사용하여 UserProfileViewModel에 있는 user 객체를 UserProfileFragment에 연결하였다.
 
+이제 어떻게 하면 사용자 프로필 정보인 user 객체의 정보를 가져올 수 있을까?
 
+REST API를 사용하여 프로필 정보를 제공한다고 가정하자.
 
+Retrofit 라이브러리를 사용하여 서버와 통신한다면 다음과 같은 Webservice를 interface 형태로 정의할 것이다.
+
+~~~kotlin
+interface Webservice {
+       @GET("/users/{user}")
+       fun getUser(@Path("user") userId: String): Call<User>
+}
+~~~
+
+<br>
+
+ViewModel에 들어있는 user 객체 정보를 가져오는 과정까지를 포함하는 ViewModel을 구현하는 방법은 여러가지가 있다.
+
+첫 번째 방법은 Webservice를 직접 호출하여 데이터를 가져오고 이 데이터를 LiveData 객체에 할당하는 것이다.
+
+하지만 이 방법을 사용하면 앱이 커지게 될 때 유지보수가 어려워질 수 있고, UserProfileViewModel에 너무 많은 책임을 부여하게 되어 __관심사 분리__ 원칙을 위반하게 된다.
+
+또, ViewModel은 Activity나 Fragment의 수명 주기와 연관되어 있으므로 관련 UI의 수명 주기가 끝나면 Webservice의 데이터가 손실된다는 문제점이 있다.
+
+따라서 이러한 방법으로 ViewModel을 구현한다면 원활한 사용자 환경의 흐름에 도움이 되지 않을 것이다.
+
+따라서 두 번째 방법인 __데이터 가져오기 프로세스를 ViewModel이 아닌 새로운 저장소에 위임__ 하는 방법으로 ViewModel을 구현하자.
+
+이 저장소를 __Repository__ 라고 하고, 맨 처음 보여준 Architecture 구조에서 ViewModel 아래 단계에 존재하는 것을 말한다.
+
+Repository에서는 데이터 작업을 처리하도록 하면 된다.
+
+따라서 UserRepository 클래스를 하나 생성하고 다음과 같은 코드를 추가해보자.
+
+~~~kotlin
+class UserRepository {
+    // REST API interface 선언
+    private val webservice: Webservice = TODO()
+
+    // Webservice에서 정의해 준 getUser 함수 호출   
+    fun getUser(userId: String): LiveData<User> {
+        // This isn't an optimal implementation. We'll fix it later.
+        val data = MutableLiveData<User>()
+        webservice.getUser(userId).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                data.value = response.body()
+            }
+            // Error case is left out for brevity.
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                TODO()
+            }
+        })
+        return data
+    }
+}
+~~~
+
+이렇게 함으로써 UserProfileViewModel 안에서 LiveData에 직접 정보를 넣어주지 않고,UserRepository 라는 클래스에서 LiveData에 정보를 넣게 된다.
+
+따라서 UserProfileViewModel은 데이터를 가져오는 방법(어떤 REST API 호출 함수를 호출해서 가져오는지 등)을 알지 못하기 떄문에 여러 개의 서로 다른 API를 호출하여 얻은 데이터를 ViewModel에 제공할 수 있도록 해주는 것이다.
+
+<br>
+
+이렇게 UI - ViewModel - Repository 까지의 구조에 대해서 알아보고 이해하였다!
+
+이 시점에서 __안드로이드 아키텍처의 구성요소간 종속성 관리__ 에 대해서 생각해보자.
+
+예를 들어, UserRepository 클래스에서 사용자의 데이터를 가져오기 위해 Webservice 의 인스턴스를 생성했었던 것을 생각해보자.
+
+![03](https://user-images.githubusercontent.com/31889335/83407257-4a0ba100-a44b-11ea-9849-238ebd515768.PNG)
+
+Webservice는 레트로핏을 공부하면 간단히 만들 수 있지만 Webservice를 만드는 것 외에도 Webservice의 종속성에 대해서 알아야 한다.
+
+또, 프로필 데이터를 가져오기 위한 방법으로 Webservice가 유일한 방법도 아닐 수 있다. (안드로이드 내부 저장소에 프로필 데이터를 저장시켜놓았다면 Room에 접근하여 가져와야 한다.)
+
+따라서 이러한 상황이라면 Webservice의 인스턴스 생성이 필요한 각각의 클래스에서 인스턴스 생성 코드를 복제해야 할 것이다.
+
+이렇게 클래스별로 새로운 WebService 인스턴스를 생성하면 앱의 리소스(자원, 메모리 등) 소모량이 커질 가능성이 있게 된다.
+
+따라서 이러한 문제를 해결하기 위해 다음과 같은 __디자인 패턴__ 을 사용해야 한다.
+
+<br>
+
+- [DI(Dependency injection) 패턴](https://en.wikipedia.org/wiki/Dependency_injection) 사용하기 = 종속성 주입하기
+
+    DI 패턴을 사용하면 클래스가 자신의 종속성을 구성할 필요 없이 종속성을 정의할 수 있다.
+
+    즉, 런타임시 다른 특정한 클래스가 클래스 별 종속성을 제공함으로써 각 클래스에서는 종속성을 따로 정의할 필요가 없는 것이다.
+
+    <br>
+
+    > 아...?! 
+    >
+    > 여기서 종속성을 정의한다는 것은 webService를 사용하기 위해 UserRepository에서 webServiec 인스턴스를 생성한 것, UserProfileFragment에서 ViewModel을 사용하기 위해 UserProfileViewModel 인스턴스를 생성한 것과 같이 어떠한 인스턴스를 선언하고 생성하는 것이 종속성을 정의한다는 것이군..!!!
+
+    <br>
+
+    이러한 DI를 구현하려면 [Dagger2](https://dagger.dev/) 라이브러리를 사용하는 것이 좋다.
+
+    Dagger2는 종속성 트리를 따라 이동하며 객체를 자동으로 구성하고 종속성을 위한 컴파일 시간을 보장해주는 라이브러리이기 때문이다.
+
+    <br>
+
+- [Service Locator 패턴](https://en.wikipedia.org/wiki/Service_locator_pattern) 사용하기
+
+    Service Locator 패턴은 클래스가 자신의 종속 항목을 직접 구성하는 대신 종속 항목을 가져올 수 있는 레지스트리를 제공하는 패턴이다.
+
+<br>
+
+DI 패턴보다 Service Locator 패턴의 구현이 더 쉬우므로 DI에 익숙하지 않다면 Service Locator를 사용하는 것이 좋다.
+
+<br>
+
+__4️⃣. ViewModel과 Repository 연결하기__
+
+이제 UserRepository에서 가져온 데이터를 UserProfileViewModel에서 사용할 수 있도록 UserProfileViewModel 클래스의 코드를 다음과 같이 수정해보자.
+
+~~~kotlin
+class UserProfileViewModel @Inject constructor(
+       savedStateHandle: SavedStateHandle,
+       userRepository: UserRepository
+    ) : ViewModel() {
+       val userId : String = savedStateHandle["uid"] ?:
+              throw IllegalArgumentException("missing user id")
+       val user : LiveData<User> = userRepository.getUser(userId)
+}
+~~~
+
+<br>
+
+__5️⃣. 데이터를 캐시에 저장하기__
+
+UserRepository 구현을 위해 Webservice 객체 호출이 필요하지만 하나의 데이터 소스에만 의존하기 때문에 유연성이 떨어진다는 단점이 있다.
+
+또 다른 UserRepository 구현에서 발생하는 문제는 서버에서 데이터를 가져온 후 어디에도 보관하지 않는다는 점이다. 
+
+따라서 사용자가 UserProfileFragment를 떠났다가 다시 돌아오면 수명 주기에 의해 LiveData는 데이터를 담고 있지 않으므로 다시 서버에서 데이터를 가져와야 한다.
+
+이러한 단점을 해결하기 위해 서버에서 가져온 데이터를 캐시(해드폰 메모리)에 저장하는 것이 좋다.
+
+서버에서 가져온 데이터를 캐시에 저장하기 위해 UserRepository 클래스 안의 코드를 다음과 같이 바꿔보자.
+
+~~~kotlin
+// Informs Dagger that this class should be constructed only once. ( = dagger 사용)
+    @Singleton
+    class UserRepository @Inject constructor(
+       private val webservice: Webservice,
+       // Simple in-memory cache. Details omitted for brevity.
+       private val userCache: UserCache
+    ) {
+       fun getUser(userId: String): LiveData<User> {
+           val cached : LiveData<User> = userCache.get(userId)
+           if (cached != null) {
+               return cached
+           }
+           val data = MutableLiveData<User>()
+           // The LiveData object is currently empty, but it's okay to add it to the
+           // cache here because it will pick up the correct data once the query
+           // completes.
+           userCache.put(userId, data)
+           // This implementation is still suboptimal but better than before.
+           // A complete implementation also handles error cases.
+           webservice.getUser(userId).enqueue(object : Callback<User> {
+               override fun onResponse(call: Call<User>, response: Response<User>) {
+                   data.value = response.body()
+               }
+
+               // Error case is left out for brevity.
+               override fun onFailure(call: Call<User>, t: Throwable) {
+                   TODO()
+               }
+           })
+           return data
+       }
+    }
+~~~
+
+<br>
+
+여기까지 UI - ViewModel - Repository 구조를 이해하였다!!
+
+이와 이어지는 내용은 다음 포스팅에서 알아볼 것이며, Room 을 사용하는 경우 데이터를 가져오는 방법에 대해 알아볼 것이다.
+
+<br>
