@@ -129,7 +129,7 @@ __두 번째 원칙! "Model(모델)과 UI 분리하기"__
 
 <br>
 
-__1️⃣. 사용자 프로필 UI 만들기__
+__1️⃣ 사용자 프로필 UI 만들기__
 
 이 예시에서 UI는 user_profile_layout.xml 이라는 xml 파일과 UserProfileFragment 라는 클래스로 구성된다고 생각하자.
 
@@ -145,7 +145,7 @@ UI 안에 들어갈 정보들은 아래와 같이 총 두 가지라고 가정해
 
 <br>
 
-__2️⃣. ViewModel 클래스 만들기__
+__2️⃣ ViewModel 클래스 만들기__
 
 위에서 본 다이어그램을 보면 Activity/Fragment 아래 단계에 ViewModel이 있는 것을 볼 수 있다.
 
@@ -183,6 +183,9 @@ __ViewModel은 UI 구성요소에 관한 데이터를 제공하고 Model과 커�
 
     ~~~kotlin
     class UserProfileFragment : Fragment() {
+    // To use the viewModels() extension function, include
+    // "androidx.fragment:fragment-ktx:latest-version" in your app
+    // module's build.gradle file.
     private val viewModel: UserProfileViewModel by viewModels()
 
         override fun onCreateView(
@@ -213,6 +216,15 @@ __ViewModel은 UI 구성요소에 관한 데이터를 제공하고 Model과 커�
 SavedState 모듈을 사용하기 위해 다음과 같이 UserProfileViewModel 클래스를 다음과 같이 수정해보자.
 
 ~~~kotlin
+private val viewModel: UserProfileViewModel by viewModels(
+       factoryProducer = { SavedStateVMFactory(this) }
+)
+~~~
+
+
+또 이 ViewModel 클래스를 Fragment 클래스에서 사용하도록 해야하므로 UserProfileFragment 클래스에 다음과 같은 코드를 추가하자.
+
+~~~kotlin
 // 클래스 생성 인자로 savedStateHandle을 갖는다
 class UserProfileFragment : Fragment() {
     private val viewModel: UserProfileViewModel by viewModels() {
@@ -221,14 +233,6 @@ class UserProfileFragment : Fragment() {
         val user : User = TODO()
     }
 }
-~~~
-
-또 이 ViewModel 클래스를 Fragment 클래스에서 사용하도록 해야하므로 UserProfileFragment 클래스에 다음과 같은 코드를 추가하자.
-
-~~~kotlin
-private val viewModel: UserProfileViewModel by viewModels(
-       factoryProducer = { SavedStateVMFactory(this) }
-)
 ~~~
 
 여기까지는 userId를 사용하기 위해 ViewModel과 UI에 코드를 추가한 것이였다.
@@ -282,7 +286,7 @@ LiveData는 수명 주기를 자동으로 관찰하고 있다고 했으므로 on
 
 <br>
 
-__3️⃣. 데이터 가져오기__
+__3️⃣ 데이터 가져오기__
 
 위에서 LiveData를 사용하여 UserProfileViewModel에 있는 user 객체를 UserProfileFragment에 연결하였다.
 
@@ -398,7 +402,7 @@ DI 패턴보다 Service Locator 패턴의 구현이 더 쉬우므로 DI에 익�
 
 <br>
 
-__4️⃣. ViewModel과 Repository 연결하기__
+__4️⃣ ViewModel과 Repository 연결하기__
 
 이제 UserRepository에서 가져온 데이터를 UserProfileViewModel에서 사용할 수 있도록 UserProfileViewModel 클래스의 코드를 다음과 같이 수정해보자.
 
@@ -415,7 +419,7 @@ class UserProfileViewModel @Inject constructor(
 
 <br>
 
-__5️⃣. 데이터를 캐시에 저장하기__
+__5️⃣ 데이터를 캐시에 저장하기__
 
 UserRepository 구현을 위해 Webservice 객체 호출이 필요하지만 하나의 데이터 소스에만 의존하기 때문에 유연성이 떨어진다는 단점이 있다.
 
