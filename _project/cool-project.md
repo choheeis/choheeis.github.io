@@ -1,6 +1,6 @@
 ---
 layout: project_single
-title:  "Cool Project"
+title:  "안드로이드"
 slug: "cool-project"
 ---
-Just a demo text for now, which signifies there is lot of scope for improvement.
+하이하이하이하이하ㅣㅇ

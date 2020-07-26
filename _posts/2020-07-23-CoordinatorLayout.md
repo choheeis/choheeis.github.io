@@ -2,7 +2,7 @@
 layout: post
 title:  "[안드로이드] Coordinator Layout"
 date:   2020-07-23 18:34:10 +0700
-categories: category/android
+categories: [안드로이드]
 ---
 
 ## Coordinator Layout이 뭐냐!
